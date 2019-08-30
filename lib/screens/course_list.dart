@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/providers/department.dart';
 import 'package:sess_app/providers/departments_provider.dart';
@@ -11,11 +12,11 @@ class CourseList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final department = ModalRoute.of(context).settings.arguments as Department;
-
+    final auth = Provider.of<Auth>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "دروس بخش " + department.name,
+          "دروس " + department.name,
           textDirection: TextDirection.rtl,
         ),
         centerTitle: true,
@@ -25,7 +26,7 @@ class CourseList extends StatelessWidget {
       body: Container(
         padding: EdgeInsets.all(10),
         child: FutureBuilder(
-          future: department.fetchAndSetCourses(),
+          future: department.fetchAndSetCourses(auth.token),
           builder: (_, snapshot) =>
               snapshot.connectionState == ConnectionState.waiting
                   ? Center(

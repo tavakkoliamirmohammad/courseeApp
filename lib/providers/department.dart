@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class Department with ChangeNotifier {
   final int id;
   final String name;
-  CourseListProvider courses = CourseListProvider();
+  CourseListProvider courses;
 
   Department({@required this.id, @required this.name});
 
@@ -47,25 +47,49 @@ class Department with ChangeNotifier {
     return timePlaceMap;
   }
 
-  Future<void> fetchAndSetCourses() async {
+  Future<void> fetchAndSetCourses(String token) async {
     try {
-      var response =
-          await http.get("http://Sessapp.moarefe98.ir/departmentcourse/$id");
+      var response = await http
+          .get("http://Sessapp.moarefe98.ir/departmentcourse/$id", headers: {
+        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        "Authorization": "Token " + token.toString(),
+      });
 
       var extractedDate = List<Map<String, dynamic>>.from(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
-      extractedDate.forEach((course) {
-        var mapTimePlace = _formatTimePlace(course['time_room']);
+      var enrollRes = await http
+          .get("http://sessapp.moarefe98.ir/usercourse/__all__", headers: {
+        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        "Authorization": "Token " + token.toString(),
+      });
 
+      var enrolledCourses = List<Map<String, dynamic>>.from(
+          jsonDecode(utf8.decode(enrollRes.bodyBytes)));
+
+//      print(enrolledCourses);
+      courses = CourseListProvider();
+      extractedDate.forEach((course) {
+        bool isEnrolled = false;
+        var mapTimePlace = _formatTimePlace(course['time_room']);
+        for (var i = 0; i < enrolledCourses.length; ++i) {
+          if (enrolledCourses[i]['course']['pk'] == course['pk']) {
+            isEnrolled = true;
+            break;
+          }
+        }
         courses.addCourse(
             course['pk'],
             course['title'],
             _formatTeachersName(course['teacher']),
             mapTimePlace['place'],
             mapTimePlace['time'],
-            course['gender']);
+            course['gender'],
+            isEnrolled);
       });
+      print("course length is " + courses.courses.length.toString());
     } catch (e) {
       print(e.toString());
     }

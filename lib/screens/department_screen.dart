@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/departments_provider.dart';
 import 'package:sess_app/widgets/department_item.dart';
+import 'package:sess_app/widgets/main_drawer.dart';
 
 class DepartmentScreen extends StatelessWidget {
+
+  static final routeName = "/department-name";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +29,7 @@ class DepartmentScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
+      drawer: MainDrawer(),
       body: FutureBuilder(
         future: Provider.of<DepartmentsProvider>(context, listen: false)
             .fetchAndSetDepartments(),

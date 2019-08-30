@@ -9,14 +9,9 @@ class Course with ChangeNotifier {
   final String place;
   final String sexuality;
   final String time;
-  final List<CourseNote> notes = [
-    CourseNote(dateTime: DateTime.now(), note: "سلام خوبین"
-        "منم خوبم"),
-    CourseNote(dateTime: DateTime.now(), note: "سلام خوبین"
-        "منم خوبم"),
-    CourseNote(dateTime: DateTime.now(), note: "سلام خوبین"
-        "منم خوبم"),
-  ];
+  bool isEnrolled = false;
+
+  final List<CourseNote> notes = [];
   final List<Exam> exams = [];
 
   Course(
@@ -25,14 +20,25 @@ class Course with ChangeNotifier {
       @required this.teacher,
       @required this.place,
       @required this.sexuality,
-      @required this.time});
+      @required this.time,
+      @required this.isEnrolled});
+
+  void enroll() {
+    this.isEnrolled = true;
+    notifyListeners();
+  }
+
+  void unroll() {
+    this.isEnrolled = false;
+    notifyListeners();
+  }
 
   void addNote(String note) {
     notes.add(CourseNote(note: note, dateTime: DateTime.now()));
     notifyListeners();
   }
 
-  void addExam(String description, DateTime time){
+  void addExam(String description, DateTime time) {
     exams.add(Exam(description: description, examTime: time));
     notifyListeners();
   }

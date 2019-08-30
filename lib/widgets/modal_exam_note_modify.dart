@@ -104,29 +104,6 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                             );
                           },
                         );
-//                        showDatePicker(
-//                                context: context,
-//                                initialDate: DateTime.now(),
-//                                firstDate:
-//                                    DateTime.now().subtract(Duration(days: 20)),
-//                                lastDate:
-//                                    DateTime.now().add(Duration(days: 100)))
-//                            .then((value) {
-//                          if (value == null) {
-//                            return;
-//                          }
-//                          info['dateTime'] = value;
-//                          showTimePicker(
-//                                  context: context,
-//                                  initialTime: TimeOfDay.now())
-//                              .then((value) {
-//                            if (value == null) {
-//                              return;
-//                            }
-//                            info['dateTime'].add(Duration(
-//                                hours: value.hour, minutes: value.minute));
-//                          });
-//                        });
                       },
                     )
                   : Container(),

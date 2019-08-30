@@ -17,9 +17,11 @@ class DepartmentsProvider with ChangeNotifier {
         await http.get("http://sessapp.moarefe98.ir/department/__all__");
     var extractedDate = List<Map<String, dynamic>>.from(
         jsonDecode(utf8.decode(response.bodyBytes)));
+    final List<Department> extractedList = [];
     extractedDate.forEach((dep) {
-      _departments.add(Department(id: dep['id'], name: dep['title']));
+      extractedList.add(Department(id: dep['id'], name: dep['title']));
     });
+    _departments = extractedList;
     print(_departments.length);
     notifyListeners();
   }

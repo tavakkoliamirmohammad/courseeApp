@@ -15,14 +15,14 @@ class CourseListProvider with ChangeNotifier {
   }
 
   void addCourse(int id, String title, String teacher, String place, String time,
-      String sexuality) {
+      String sexuality, bool isEnrolled) {
     _courses.add(Course(
         id: id,
         title: title,
         teacher: teacher,
         place: place,
         sexuality: sexuality,
-        time: time));
+        time: time, isEnrolled: isEnrolled));
     notifyListeners();
   }
 }
