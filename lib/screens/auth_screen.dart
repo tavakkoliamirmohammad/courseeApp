@@ -22,16 +22,9 @@ class AuthScreen extends StatelessWidget {
                       child: ConstrainedBox(
                         constraints: BoxConstraints(minWidth: constraint.maxWidth, minHeight: constraint.maxHeight),
                         child: Container(
-                          decoration: BoxDecoration(
-//                            gradiennt: LinearGradient(
-//                                colors: [Color(0xFF004e92), Color(0xFF000428)],
-//                                begin: Alignment.bottomCenter,
-//                                end: Alignment.topCenter,
-//                                stops: [0, 1]),
-                          ),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
+//                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: <Widget>[
                               Container(
                                 child: Text("The logo"),

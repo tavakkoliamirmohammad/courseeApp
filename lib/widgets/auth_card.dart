@@ -23,7 +23,7 @@ class _AuthCardState extends State<AuthCard> {
 
   bool isLoading = false;
 
-  double mainHeight = 500;
+  double mainHeight;
 
   final Map<String, dynamic> info = {'dep': null, 'phone': '', 'name': ''};
 
@@ -63,53 +63,51 @@ class _AuthCardState extends State<AuthCard> {
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-//        shape: RoundedRectangleBorder(
-//            borderRadius: BorderRadius.all(Radius.circular(20))),
-        title: Text("کد تایید"),
-        content: Container(
-          height: 100,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                "کد تایید را وارد کنید",
-                textDirection: TextDirection.rtl,
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              Directionality(
-                textDirection: TextDirection.rtl,
-                child: TextField(
-                  cursorColor: Theme.of(context).accentColor,
-                  textDirection: TextDirection.rtl,
-                  keyboardType: TextInputType.number,
-                  textInputAction: TextInputAction.done,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    labelText: "کد",
-                  ),
-                  onChanged: (value) {
-                    code = value;
-                  },
-                  onSubmitted: (value) {
-                    code = value;
-                    Navigator.of(ctx).pop(code);
-                  },
-                ),
-              ),
-            ],
-          ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        title: Text(
+          "کد تایید",
+          textDirection: TextDirection.rtl,
         ),
-        actions: <Widget>[
-          Container(
-            width: 300,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              "کد تایید را وارد کنید",
+              textDirection: TextDirection.rtl,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Directionality(
+              textDirection: TextDirection.rtl,
+              child: TextField(
+                cursorColor: Theme.of(context).accentColor,
+                textDirection: TextDirection.rtl,
+                keyboardType: TextInputType.number,
+                textInputAction: TextInputAction.done,
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  labelText: "کد",
+                ),
+                onChanged: (value) {
+                  code = value;
+                },
+                onSubmitted: (value) {
+                  code = value;
+                  Navigator.of(ctx).pop(code);
+                },
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 RaisedButton(
                   onPressed: () {
@@ -119,6 +117,7 @@ class _AuthCardState extends State<AuthCard> {
                   child: Text(
                     "تایید",
                     textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.center,
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
@@ -130,13 +129,14 @@ class _AuthCardState extends State<AuthCard> {
                   child: Text(
                     "لغو",
                     style: TextStyle(color: Colors.white, fontSize: 16),
+                    textAlign: TextAlign.center,
                     textDirection: TextDirection.rtl,
                   ),
                 ),
               ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -200,12 +200,15 @@ class _AuthCardState extends State<AuthCard> {
 
   @override
   Widget build(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context).size;
+
+    mainHeight = mediaQuery.height * 0.7;
+
     return SingleChildScrollView(
-      child: AnimatedContainer(
-        duration: Duration(milliseconds: 500),
-        padding: EdgeInsets.all(20),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
+            borderRadius: BorderRadius.circular(20),
             gradient: LinearGradient(
               colors: [
                 Color(0xFFC33764),
@@ -216,7 +219,8 @@ class _AuthCardState extends State<AuthCard> {
               end: Alignment.topRight,
             )),
         height: mainHeight,
-        margin: EdgeInsets.symmetric(vertical: 50, horizontal: 40),
+        width: mediaQuery.width * 0.9,
+        constraints: BoxConstraints(maxWidth: 500),
         child: Form(
           key: _form,
           child: Column(
@@ -245,9 +249,9 @@ class _AuthCardState extends State<AuthCard> {
                             },
                           ),
                         ),
-//                        SizedBox(
-//                          height: 30,
-//                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
                       ],
                     )
                   : Container(),
@@ -257,7 +261,6 @@ class _AuthCardState extends State<AuthCard> {
                   print(info['phone']);
                 },
                 formatInput: false,
-                shouldValidate: true,
                 initialCountry2LetterCode: "IR",
                 inputDecoration: InputDecoration(
                   labelText: "شماره تلفن",
@@ -296,7 +299,7 @@ class _AuthCardState extends State<AuthCard> {
                           softWrap: true,
                         ),
                         SizedBox(
-                          height: 40,
+                          height: 20,
                         ),
                       ],
                     )
@@ -323,15 +326,17 @@ class _AuthCardState extends State<AuthCard> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
                         onPressed: _saveForm,
-                        child: Text(
-                          userState == UserState.Signup ? "ثبت نام" : "ورود",
-                          style: TextStyle(fontSize: 18),
+                        child: Container(
+                          width: 200,
+                          child: Text(
+                            userState == UserState.Signup ? "ثبت نام" : "ورود",
+                            style: TextStyle(fontSize: 18),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                         color: Colors.transparent,
                         elevation: 0,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 80,
-                        ),
+//                        ),
                       ),
                     ),
               SizedBox(
@@ -346,12 +351,17 @@ class _AuthCardState extends State<AuthCard> {
                         SizedBox(
                           width: 10,
                         ),
-                        FlatButton(
-                          child: Text("وارد شوید"),
+                        RaisedButton(
+                          padding: EdgeInsets.all(5),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                          child: Text(
+                            "وارد شوید",
+                            style: TextStyle(fontSize: 12),
+                          ),
                           onPressed: () {
                             setState(() {
                               userState = UserState.Login;
-                              mainHeight = 350;
                             });
                           },
                         )
@@ -365,12 +375,13 @@ class _AuthCardState extends State<AuthCard> {
                         SizedBox(
                           width: 10,
                         ),
-                        FlatButton(
+                        RaisedButton(
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
                           child: Text("ثبت نام کنید"),
                           onPressed: () {
                             setState(() {
                               userState = UserState.Signup;
-                              mainHeight = 470;
                             });
                           },
                         )
