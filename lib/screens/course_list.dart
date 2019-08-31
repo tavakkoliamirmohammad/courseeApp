@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
-import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/providers/department.dart';
-import 'package:sess_app/providers/departments_provider.dart';
 import 'package:sess_app/widgets/course_list_item.dart';
 
 class CourseList extends StatelessWidget {

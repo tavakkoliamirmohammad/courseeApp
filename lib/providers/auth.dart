@@ -24,7 +24,6 @@ class Auth with ChangeNotifier {
         headers: {
           'Content-Type': 'application/json',
         });
-    print(json.decode(res.body));
   }
 
   Future<void> signup(
@@ -41,7 +40,6 @@ class Auth with ChangeNotifier {
     if(token == null){
       return;
     }
-    print(token);
 
     final updateRes =
         await http.post("http://sessapp.moarefe98.ir/profile/update/",
@@ -55,10 +53,11 @@ class Auth with ChangeNotifier {
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-    print(json.decode(updateRes.body));
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', token);
+    print("in sign up");
+    print(prefs.containsKey("authToken"));
     notifyListeners();
   }
 
@@ -73,21 +72,28 @@ class Auth with ChangeNotifier {
         });
 
     token = json.decode(res.body)['token'];
-    print(token);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('authToken', token);
     notifyListeners();
   }
 
   Future<bool> autoLogin() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey("authToken")) {
-      return false;
+    try{
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      print(prefs.containsKey("authToken"));
+      if (!prefs.containsKey("authToken")) {
+        return false;
+      }
+
+      // add other information
+
+      token = prefs.getString("authToken");
+      notifyListeners();
+      return true;
+    }catch (e){
+      print(e.toString());
     }
 
-    // add other information
-
-    token = prefs.getString("authToken");
-    notifyListeners();
-    return true;
   }
 
   Future<void> logout() async {
@@ -108,7 +114,6 @@ class Auth with ChangeNotifier {
           "Authorization": "Token " + token.toString(),
         });
     course.enroll();
-    print(json.decode(res.body));
   }
 
   Future<void> unrollCourse(Course course) async {
@@ -119,8 +124,7 @@ class Auth with ChangeNotifier {
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-    print(res.statusCode);
     course.unroll();
-
   }
+
 }

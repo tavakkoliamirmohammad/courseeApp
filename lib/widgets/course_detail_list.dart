@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:sess_app/widgets/course_detail_item.dart';
 
 class CourseDetailList extends StatelessWidget {
@@ -6,12 +7,15 @@ class CourseDetailList extends StatelessWidget {
   final String place;
   final String time;
   final String sexulaity;
+  final int group;
+
 
   CourseDetailList({
     @required this.teacher,
     @required this.time,
     @required this.place,
     @required this.sexulaity,
+    @required this.group,
   });
 
   @override
@@ -29,6 +33,11 @@ class CourseDetailList extends StatelessWidget {
           icon: Icons.account_balance,
         ),
         CourseDetailItem(
+          title: "گروه",
+          subtitle: group.toString(),
+          icon: FontAwesomeIcons.users,
+        ),
+        CourseDetailItem(
           title: "ساعت کلاس",
           subtitle: time,
           icon: Icons.access_time,
@@ -36,7 +45,7 @@ class CourseDetailList extends StatelessWidget {
         CourseDetailItem(
           title: "جنسیت",
           subtitle: sexulaity,
-          icon: Icons.people,
+          icon: FontAwesomeIcons.venusMars,
         ),
       ],
     );

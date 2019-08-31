@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/screens/auth_screen.dart';
+import 'package:sess_app/screens/department_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _drawerItemBuilder(String title, IconData icon, Function callback) {
@@ -30,7 +31,11 @@ class MainDrawer extends StatelessWidget {
           ),
           _drawerItemBuilder("درس های من", FontAwesomeIcons.bookOpen, () {}),
           Divider(),
-          _drawerItemBuilder("بخش ها", FontAwesomeIcons.building, () {}),
+          _drawerItemBuilder(
+              "بخش ها",
+              FontAwesomeIcons.building,
+              () => Navigator.of(context)
+                  .pushReplacementNamed(DepartmentScreen.routeName)),
           Divider(),
           _drawerItemBuilder("خروج", Icons.exit_to_app, () {
             Provider.of<Auth>(context, listen: false).logout();

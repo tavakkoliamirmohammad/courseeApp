@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/departments_provider.dart';
@@ -7,7 +8,12 @@ import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/screens/course_list.dart';
 import 'package:sess_app/screens/department_screen.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) {
+    runApp(MyApp());
+  });
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -31,14 +37,15 @@ class MyApp extends StatelessWidget {
               subtitle: TextStyle(color: Colors.grey)),
         ),
         home: Consumer<Auth>(
-            builder: (_, auth, __) => auth.isAuth
+            builder: (_, auth, __) =>
+            auth.isAuth
                 ? DepartmentScreen()
                 : FutureBuilder(
-                    future: auth.autoLogin(),
-                    builder: (_, snapshot) =>
-                        snapshot.connectionState == ConnectionState.waiting
-                            ? Center(child: CircularProgressIndicator())
-                            : AuthScreen())),
+                future: auth.autoLogin(),
+                builder: (_, snapshot) =>
+                snapshot.connectionState == ConnectionState.waiting
+                    ? Center(child: CircularProgressIndicator())
+                    : AuthScreen())),
         routes: {
           AuthScreen.routeName: (_) => AuthScreen(),
           DepartmentScreen.routeName: (_) => DepartmentScreen(),

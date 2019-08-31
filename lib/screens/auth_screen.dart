@@ -9,6 +9,8 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset: false,
       body: FutureBuilder(
         future: Provider.of<DepartmentsProvider>(context, listen: false)
             .fetchAndSetDepartments(),
@@ -20,7 +22,9 @@ class AuthScreen extends StatelessWidget {
             : LayoutBuilder(
                 builder: (ctx, constraint) => SingleChildScrollView(
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(minWidth: constraint.maxWidth, minHeight: constraint.maxHeight),
+                        constraints: BoxConstraints(
+                            minWidth: constraint.maxWidth,
+                            minHeight: constraint.maxHeight),
                         child: Container(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,

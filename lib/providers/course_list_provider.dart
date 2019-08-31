@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sess_app/models/course_note.dart';
+import 'package:sess_app/models/exam.dart';
 import 'package:sess_app/providers/course.dart';
 
 class CourseListProvider with ChangeNotifier {
@@ -14,15 +16,20 @@ class CourseListProvider with ChangeNotifier {
     });
   }
 
-  void addCourse(int id, String title, String teacher, String place, String time,
-      String sexuality, bool isEnrolled) {
+  void addCourse(int id, String title, String teacher, String place,
+      String time, String sexuality, bool isEnrolled, List<Exam> exams, List<CourseNote> notes, int group) {
     _courses.add(Course(
-        id: id,
-        title: title,
-        teacher: teacher,
-        place: place,
-        sexuality: sexuality,
-        time: time, isEnrolled: isEnrolled));
+      id: id,
+      title: title,
+      teacher: teacher,
+      place: place,
+      sexuality: sexuality,
+      time: time,
+      isEnrolled: isEnrolled,
+      exams: exams,
+      notes: notes,
+      group: group,
+    ));
     notifyListeners();
   }
 }

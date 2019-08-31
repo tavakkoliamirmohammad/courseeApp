@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/course.dart';
@@ -19,7 +20,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
   PageController _pageController;
   bool isEnrolled;
   bool isInit = false;
-  var course;
+  Course course;
 
   @override
   void initState() {
@@ -71,10 +72,15 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       sexulaity: course.sexuality,
                       teacher: course.teacher,
                       time: course.time,
+                      group: course.group,
                     ),
-                    CourseDetailExam(),
-                    CourseDetailNote(
-                      notes: course.notes,
+                    ChangeNotifierProvider<Course>.value(
+                      child: CourseDetailExam(),
+                      value: course,
+                    ),
+                    ChangeNotifierProvider<Course>.value(
+                      child: CourseDetailNote(),
+                      value: course,
                     ),
                   ],
                 ),
@@ -104,7 +110,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   title: Text("امتحانات"),
                 ),
                 BottomNavigationBarItem(
-                  icon: Icon(Icons.message),
+                  icon: Icon(FontAwesomeIcons.stickyNote),
                   title: Text("یادداشت ها"),
                 )
               ],
@@ -112,12 +118,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           : null,
       floatingActionButton: Consumer<Auth>(
         builder: (_, auth, child) => _currentPage == 0
-            ? FloatingActionButton.extended(
-                icon: Icon(!isEnrolled ? Icons.add : Icons.delete),
-                label: Text(
-                  !isEnrolled ? "افزودن به درس های من" : "حذف از درس های من",
-                  textDirection: TextDirection.rtl,
-                ),
+            ? FloatingActionButton(
+                child:  Icon(!isEnrolled ? FontAwesomeIcons.userPlus : FontAwesomeIcons.userMinus),
                 onPressed: !isEnrolled
                     ? () {
                         auth.enrollCourse(course);
@@ -138,11 +140,13 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       context: context,
                       builder: (_) => ModalModifyExamNote(
                             afterSave: _currentPage == 1
-                                ? course.addExam
-                                : course.addNote,
-                            addType: _currentPage == 1
-                                ? AddType.AddExam
-                                : AddType.AddNote,
+                                ? (String note, DateTime dateTime,
+                                        String token) =>
+                                    course.addExam(course.id, note, dateTime, token)
+                                : (String note, String token) =>
+                                    course.addNote(course.id, note, token),
+                            type:
+                                _currentPage == 1 ? Type.AddExam : Type.AddNote,
                           ),
                       isScrollControlled: true);
                 },

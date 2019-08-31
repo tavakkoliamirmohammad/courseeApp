@@ -24,17 +24,20 @@ class CourseDetailItem extends StatelessWidget {
             end: Alignment.bottomRight),
       ),
       child: ListTile(
-        title: Text(
-          title,
-          textDirection: TextDirection.rtl,
-          style: TextStyle(
-              color: Theme.of(context).textTheme.body1.color, fontSize: 20),
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: Text(
+            title,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(
+                color: Theme.of(context).textTheme.body1.color, fontSize: 20),
+          ),
         ),
         trailing: CourseDetailItemAvatar(
           icon: icon,
         ),
         subtitle: Text(
-          subtitle,
+          subtitle.isEmpty ? "نامشخص" : subtitle,
           textDirection: TextDirection.rtl,
           style: TextStyle(
               color: Theme.of(context).textTheme.subtitle.color, fontSize: 18),

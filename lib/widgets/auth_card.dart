@@ -5,6 +5,7 @@ import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/departments_provider.dart';
+import 'package:sess_app/widgets/errorDialog.dart';
 
 enum UserState {
   Login,
@@ -24,38 +25,23 @@ class _AuthCardState extends State<AuthCard> {
   bool isLoading = false;
 
   double mainHeight;
+  var isinit = false;
 
+  @override
+  void didChangeDependencies() {
+    if(!isinit){
+      mainHeight = MediaQuery.of(context).size.height * 0.7;
+    }
+    isinit = true;
+    super.didChangeDependencies();
+  }
   final Map<String, dynamic> info = {'dep': null, 'phone': '', 'name': ''};
 
   Future<void> _showMessageDialog(String message) async {
     return showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              title: Text(
-                "خطا",
-                textDirection: TextDirection.rtl,
-              ),
-              content: Text(message),
-              actions: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: <Widget>[
-                    RaisedButton(
-                      color: Colors.red,
-                      child: Text(
-                        "باشه",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    )
-                  ],
-                )
-              ],
-            ));
+      context: context,
+      builder: (ctx) => ErrorDialog(message: message, ctx: ctx,),
+    );
   }
 
   Future<String> _showCheckVerificationDialog() async {
@@ -84,7 +70,7 @@ class _AuthCardState extends State<AuthCard> {
             Directionality(
               textDirection: TextDirection.rtl,
               child: TextField(
-                cursorColor: Theme.of(context).accentColor,
+                cursorColor: Theme.of(ctx).accentColor,
                 textDirection: TextDirection.rtl,
                 keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.done,
@@ -202,10 +188,10 @@ class _AuthCardState extends State<AuthCard> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
 
-    mainHeight = mediaQuery.height * 0.7;
 
     return SingleChildScrollView(
-      child: Container(
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 500),
         padding: EdgeInsets.symmetric(vertical: 20, horizontal: 30),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
@@ -232,6 +218,7 @@ class _AuthCardState extends State<AuthCard> {
                         Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
+                            cursorColor: Theme.of(context).accentColor,
                             textDirection: TextDirection.rtl,
                             decoration: InputDecoration(
                               labelText: "نام",
@@ -362,6 +349,7 @@ class _AuthCardState extends State<AuthCard> {
                           onPressed: () {
                             setState(() {
                               userState = UserState.Login;
+                              mainHeight = mediaQuery.height *0.5;
                             });
                           },
                         )
@@ -382,6 +370,7 @@ class _AuthCardState extends State<AuthCard> {
                           onPressed: () {
                             setState(() {
                               userState = UserState.Signup;
+                              mainHeight = mediaQuery.height *0.7;
                             });
                           },
                         )

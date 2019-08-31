@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:sess_app/models/course_note.dart';
+import 'package:sess_app/models/exam.dart';
 import 'package:sess_app/providers/course_list_provider.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,16 +71,39 @@ class Department with ChangeNotifier {
       var enrolledCourses = List<Map<String, dynamic>>.from(
           jsonDecode(utf8.decode(enrollRes.bodyBytes)));
 
-//      print(enrolledCourses);
       courses = CourseListProvider();
       extractedDate.forEach((course) {
         bool isEnrolled = false;
+        int index = -1;
         var mapTimePlace = _formatTimePlace(course['time_room']);
         for (var i = 0; i < enrolledCourses.length; ++i) {
           if (enrolledCourses[i]['course']['pk'] == course['pk']) {
+            index = i;
             isEnrolled = true;
             break;
           }
+        }
+        List<CourseNote> notes = [];
+        List<Exam> exams = [];
+
+        if (index != -1) {
+          List<Map<String, dynamic>> exNotes =
+              List<Map<String, dynamic>>.from(enrolledCourses[index]['notes']);
+          List<Map<String, dynamic>> exExams = List<Map<String, dynamic>>.from(
+              enrolledCourses[index]['exam_dates']);
+          notes = exNotes
+              .map((note) => CourseNote(
+                  note: note['text'],
+                  dateTime: DateTime.parse(note['date']),
+                  id: note['pk']))
+              .toList();
+          exams = exExams
+              .map((exam) => Exam(
+                    description: exam['title'],
+                    examTime: DateTime.parse(exam['date']),
+                    id: exam['id'],
+                  ))
+              .toList();
         }
         courses.addCourse(
             course['pk'],
@@ -87,9 +112,11 @@ class Department with ChangeNotifier {
             mapTimePlace['place'],
             mapTimePlace['time'],
             course['gender'],
-            isEnrolled);
+            isEnrolled,
+            exams,
+            notes,
+            int.parse(course['group']));
       });
-      print("course length is " + courses.courses.length.toString());
     } catch (e) {
       print(e.toString());
     }
