@@ -36,16 +36,16 @@ class MyApp extends StatelessWidget {
               body1: TextStyle(color: Colors.white),
               subtitle: TextStyle(color: Colors.grey)),
         ),
-        home: Consumer<Auth>(
-            builder: (_, auth, __) =>
-            auth.isAuth
-                ? DepartmentScreen()
-                : FutureBuilder(
-                future: auth.autoLogin(),
-                builder: (_, snapshot) =>
-                snapshot.connectionState == ConnectionState.waiting
-                    ? Center(child: CircularProgressIndicator())
-                    : AuthScreen())),
+        home: Consumer<Auth>(builder: (_, auth, __) {
+          return auth.isAuth
+              ? DepartmentScreen()
+              : FutureBuilder(
+              future:  auth.autoLogin(),
+              builder: (_, snapshot) =>
+              snapshot.connectionState == ConnectionState.waiting
+                  ? Center(child: CircularProgressIndicator())
+                  : AuthScreen());
+        }),
         routes: {
           AuthScreen.routeName: (_) => AuthScreen(),
           DepartmentScreen.routeName: (_) => DepartmentScreen(),

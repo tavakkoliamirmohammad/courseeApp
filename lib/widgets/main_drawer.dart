@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:sess_app/main.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/screens/auth_screen.dart';
 import 'package:sess_app/screens/department_screen.dart';
@@ -38,8 +39,11 @@ class MainDrawer extends StatelessWidget {
                   .pushReplacementNamed(DepartmentScreen.routeName)),
           Divider(),
           _drawerItemBuilder("خروج", Icons.exit_to_app, () {
+            Navigator.of(context).pop();
+//            Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
             Provider.of<Auth>(context, listen: false).logout();
-            Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);
+            Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+//            runApp(MyApp());
           }),
           Divider(),
         ],

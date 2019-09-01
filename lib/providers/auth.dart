@@ -24,6 +24,8 @@ class Auth with ChangeNotifier {
         headers: {
           'Content-Type': 'application/json',
         });
+    print("verify response");
+    print(json.decode(res.body));
   }
 
   Future<void> signup(
@@ -36,11 +38,12 @@ class Auth with ChangeNotifier {
         headers: {
           'Content-Type': 'application/json',
         });
+
     token = json.decode(res.body)['token'];
     if(token == null){
       return;
     }
-
+    print(json.decode(res.body));
     final updateRes =
         await http.post("http://sessapp.moarefe98.ir/profile/update/",
             body: json.encode({
@@ -56,8 +59,6 @@ class Auth with ChangeNotifier {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', token);
-    print("in sign up");
-    print(prefs.containsKey("authToken"));
     notifyListeners();
   }
 
@@ -74,13 +75,13 @@ class Auth with ChangeNotifier {
     token = json.decode(res.body)['token'];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', token);
+    print(json.decode(res.body));
     notifyListeners();
   }
 
   Future<bool> autoLogin() async {
-    try{
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      print(prefs.containsKey("authToken"));
+      print("contains key: " + prefs.containsKey("authToken").toString());
       if (!prefs.containsKey("authToken")) {
         return false;
       }
@@ -90,9 +91,6 @@ class Auth with ChangeNotifier {
       token = prefs.getString("authToken");
       notifyListeners();
       return true;
-    }catch (e){
-      print(e.toString());
-    }
 
   }
 
@@ -103,6 +101,7 @@ class Auth with ChangeNotifier {
     token = null;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+    notifyListeners();
   }
 
   Future<void> enrollCourse(Course course) async {

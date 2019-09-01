@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
@@ -18,14 +16,21 @@ class AuthCard extends StatefulWidget {
 }
 
 class _AuthCardState extends State<AuthCard> {
-  final GlobalKey<FormState> _form = GlobalKey();
-
+  final _form = GlobalKey<FormState>();
+  final _nameForm = GlobalKey<FormFieldState>();
   UserState userState = UserState.Signup;
 
   bool isLoading = false;
 
   double mainHeight;
   var isinit = false;
+
+
+  @override
+  void initState() {
+    print("init state called");
+    super.initState();
+  }
 
   @override
   void didChangeDependencies() {
@@ -188,7 +193,6 @@ class _AuthCardState extends State<AuthCard> {
   Widget build(BuildContext context) {
     final mediaQuery = MediaQuery.of(context).size;
 
-
     return SingleChildScrollView(
       child: AnimatedContainer(
         duration: Duration(milliseconds: 500),
@@ -218,6 +222,7 @@ class _AuthCardState extends State<AuthCard> {
                         Directionality(
                           textDirection: TextDirection.rtl,
                           child: TextFormField(
+                            key: _nameForm,
                             cursorColor: Theme.of(context).accentColor,
                             textDirection: TextDirection.rtl,
                             decoration: InputDecoration(

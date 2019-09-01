@@ -15,8 +15,8 @@ class Course with ChangeNotifier {
   final int group;
   bool isEnrolled = false;
 
-  final List<CourseNote> notes;
-  final List<Exam> exams;
+  List<CourseNote> notes;
+  List<Exam> exams;
 
   Course(
       {@required this.id,
@@ -37,6 +37,8 @@ class Course with ChangeNotifier {
 
   void unroll() {
     this.isEnrolled = false;
+    this.notes = [];
+    this.exams = [];
     notifyListeners();
   }
 
