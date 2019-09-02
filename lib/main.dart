@@ -7,6 +7,8 @@ import 'package:sess_app/screens/auth_screen.dart';
 import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/screens/course_list.dart';
 import 'package:sess_app/screens/department_screen.dart';
+import 'package:sess_app/screens/profile_screen.dart';
+import 'package:sess_app/providers/course_list_provider.dart';
 
 void main() {
   SystemChrome.setEnabledSystemUIOverlays([],);
@@ -24,6 +26,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider.value(value: DepartmentsProvider()),
         ChangeNotifierProvider.value(value: Auth()),
+        ChangeNotifierProvider.value(value: CourseListProvider())
       ],
       child: MaterialApp(
         title: 'Coursee',
@@ -51,7 +54,8 @@ class MyApp extends StatelessWidget {
           AuthScreen.routeName: (_) => AuthScreen(),
           DepartmentScreen.routeName: (_) => DepartmentScreen(),
           CourseDetailScreen.routeName: (_) => CourseDetailScreen(),
-          CourseList.routeName: (_) => CourseList()
+          CourseList.routeName: (_) => CourseList(),
+          ProfileScreen.routeName: (_) => ProfileScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),

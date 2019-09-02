@@ -32,4 +32,9 @@ class CourseListProvider with ChangeNotifier {
     ));
     notifyListeners();
   }
+
+  set userCourses(List<Course> courseList) {
+    _courses = courseList;
+  }
+
 }

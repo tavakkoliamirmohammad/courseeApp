@@ -6,6 +6,7 @@ import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/widgets/course_detail_exam.dart';
 import 'package:sess_app/widgets/course_detail_list.dart';
 import 'package:sess_app/widgets/course_detail_notes.dart';
+import 'package:sess_app/widgets/course_detail_participants.dart';
 import 'package:sess_app/widgets/modal_exam_note_modify.dart';
 
 class CourseDetailScreen extends StatefulWidget {
@@ -81,6 +82,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       child: CourseDetailNote(),
                       value: course,
                     ),
+                    ChangeNotifierProvider<Course>.value(
+                      child: CourseDetailParticipants(),
+                      value: course,
+                    )
                   ],
                 ),
               ),
@@ -111,7 +116,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                 BottomNavigationBarItem(
                   icon: Icon(FontAwesomeIcons.stickyNote),
                   title: Text("یادداشت ها"),
-                )
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.people),
+                  title: Text('دانشجویان'),
+                ),
               ],
             )
           : null,
