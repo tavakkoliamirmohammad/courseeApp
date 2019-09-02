@@ -35,8 +35,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           )),
       drawer: MainDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
+      body: FutureBuilder(
+        future: Provider.of<Auth>(context, listen: false).fetchUserDetails(),
+        builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? Center(child: CircularProgressIndicator(),) : SingleChildScrollView(child: Column(
           children: <Widget>[
             Card(
               child: Padding(
@@ -53,41 +54,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     SizedBox(width: 10,),
-                    FutureBuilder(
-                      future: Provider.of<Auth>(context, listen: false).getUserInfo(),
-                      builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? Center(child: CircularProgressIndicator(),) : Text(snapshot.data[0]['name']),
-                    )
+                    Text(snapshot.data[0]['name']),
                   ],
                 ),
               ),
             ),
-            Container(
-              height: deviceSize.height * 0.5,
-              child: FutureBuilder(
-                future: Provider.of<Auth>(context).fetchUserDetails(),
-                builder: (context, snapshot) => snapshot.connectionState == ConnectionState.waiting ? Center(child: CircularProgressIndicator(),) : ListView.builder(
+            Consumer<Auth>(
+              builder: (context, auth, child) => Container(
+                height: deviceSize.height * 0.5,
+                child: ListView.builder(
                   itemBuilder: (context, index) => Column(
                     children: <Widget>[
                       ListTile(
                         onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  CourseDetailScreen.routeName,
-                                  arguments: snapshot.data.firstWhere((course) => course.id == snapshot.data[index].id));
+                          Navigator.of(context).pushNamed(
+                              CourseDetailScreen.routeName,
+                              arguments: auth.userCourses.firstWhere((course) => course.id == auth.userCourses[index].id));
                         },
                         title: Text(
-                          snapshot.data[index].title,
+                          auth.userCourses[index].title,
                           textDirection: TextDirection.rtl,
                         ),
                       ),
                       Divider(),
                     ],
                   ),
-                  itemCount: snapshot.data.length,
+                  itemCount: auth.userCourses.length,
                 ),
               ),
             ),
           ],
         ),
+      ),
       ),
     );
   }

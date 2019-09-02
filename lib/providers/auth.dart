@@ -12,7 +12,7 @@ class Auth with ChangeNotifier {
   String token;
   String phoneNumber;
   Department department;
-
+  CourseListProvider userCourseList = CourseListProvider();
   bool get isAuth {
     return token != null;
   }
@@ -114,6 +114,8 @@ class Auth with ChangeNotifier {
           "Authorization": "Token " + token.toString(),
         });
     course.enroll();
+    userCourseList.addCourse(course.id, course.title, course.teacher, course.place, course.time, course.sexuality, course.isEnrolled, course.exams, course.notes, course.group);
+    notifyListeners();
   }
 
   Future<void> unrollCourse(Course course) async {
@@ -163,7 +165,7 @@ class Auth with ChangeNotifier {
     return teachersName;
   }
 
-  Future<List<Course>> fetchUserDetails() async {
+  Future<List<Map<String, dynamic>>> fetchUserDetails() async {
     var response = await http
         .get("http://Sessapp.moarefe98.ir/profile", headers: {
       "Accept": "application/json",
@@ -191,9 +193,11 @@ class Auth with ChangeNotifier {
       ));
 //      print(course);
     });
+    userCourseList.userCourses = courseList;
+    notifyListeners();
 //    print("courses: " + courseList.toString());
     print(courseList);
-    return courseList;
+    return userInfo;
   }
 
   Future<List<Map<String, dynamic>>> getUserInfo() async {
@@ -205,6 +209,10 @@ class Auth with ChangeNotifier {
     });
     return List<Map<String, dynamic>>.from(
         jsonDecode(utf8.decode(response.bodyBytes)));
+  }
+
+  List<Course> get userCourses {
+    return userCourseList.courses;
   }
 
 }
