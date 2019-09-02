@@ -8,7 +8,6 @@ import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/screens/course_list.dart';
 import 'package:sess_app/screens/department_screen.dart';
 import 'package:sess_app/screens/profile_screen.dart';
-import 'package:sess_app/providers/course_list_provider.dart';
 
 void main() {
   SystemChrome.setEnabledSystemUIOverlays(
@@ -67,11 +66,11 @@ class HomePage extends StatelessWidget {
           ? Scaffold(
               body: Center(child: CircularProgressIndicator()),
             )
-          : (Consumer<Auth>(
-              builder: (_, auth, __) => auth.isAuth
+          : (Consumer2<Auth, DepartmentsProvider>(
+              builder: (_, auth, deps, __) => auth.isAuth
                   ? DepartmentScreen()
                   : FutureBuilder(
-                      future: auth.autoLogin(),
+                      future: auth.autoLogin(deps),
                       builder: (_, snapshot) => snapshot.connectionState ==
                               ConnectionState.waiting
                           ? Scaffold(

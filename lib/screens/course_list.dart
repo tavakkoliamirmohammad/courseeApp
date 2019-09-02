@@ -7,15 +7,40 @@ import 'package:sess_app/serachDelagate/course_search.dart';
 import 'package:sess_app/widgets/course_list_item.dart';
 import 'package:sess_app/widgets/search_input.dart' as MySearchInput;
 
-class CourseList extends StatelessWidget {
+class CourseList extends StatefulWidget {
   static final routeName = "/course-list-screen";
 
   @override
+  _CourseListState createState() => _CourseListState();
+}
+
+class _CourseListState extends State<CourseList> {
+  Future<void> _fetchAndSetUserCourse;
+  Department department;
+  Auth auth;
+  bool isInit = false;
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if(!isInit){
+      department = ModalRoute.of(context).settings.arguments as Department;
+      auth = Provider.of<Auth>(context, listen: false);
+      _fetchAndSetUserCourse = department.fetchAndSetCourses(auth.token);
+    }
+    isInit = true;
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final department = ModalRoute.of(context).settings.arguments as Department;
-    final auth = Provider.of<Auth>(context, listen: false);
     return FutureBuilder(
-      future: department.fetchAndSetCourses(auth.token),
+      future: _fetchAndSetUserCourse,
       builder: (_, snapshot) =>
           snapshot.connectionState == ConnectionState.waiting
               ? Scaffold(
@@ -31,8 +56,8 @@ class CourseList extends StatelessWidget {
                           icon: Icon(Icons.search),
                           onPressed: () {
                             MySearchInput.showSearch(
-                              cursorColor: Theme.of(context).accentColor,
-                              hintText: "جست و جو",
+                                    cursorColor: Theme.of(context).accentColor,
+                                    hintText: "جست و جو",
                                     context: context,
                                     delegate: CourseSearch(
                                         courses: department.courses.courses))

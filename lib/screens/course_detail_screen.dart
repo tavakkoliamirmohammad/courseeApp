@@ -45,6 +45,55 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     _pageController.dispose();
   }
 
+  Widget _buildFloatingActionBarButton(BuildContext ctx, Auth auth) {
+    if (_currentPage == 0) {
+      return FloatingActionButton(
+        child: Icon(!isEnrolled
+            ? FontAwesomeIcons.userPlus
+            : FontAwesomeIcons.userMinus),
+        onPressed: !isEnrolled
+            ? () {
+                auth.enrollCourse(course);
+                setState(() {
+                  isEnrolled = true;
+                });
+                Scaffold.of(ctx).removeCurrentSnackBar();
+                Scaffold.of(ctx)
+                    .showSnackBar(SnackBar(content: Text("درس اضافه شد")));
+              }
+            : () {
+                auth.unrollCourse(course);
+                setState(() {
+                  isEnrolled = false;
+                });
+                Scaffold.of(ctx).removeCurrentSnackBar();
+                Scaffold.of(ctx)
+                    .showSnackBar(SnackBar(content: Text("از درس ها حذف شد")));
+              },
+      );
+    }
+
+    if (_currentPage == 3) {
+      return Container();
+    }
+    return FloatingActionButton(
+      onPressed: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (_) => ModalModifyExamNote(
+                  afterSave: _currentPage == 1
+                      ? (String note, DateTime dateTime, String token) =>
+                          course.addExam(course.id, note, dateTime, token)
+                      : (String note, String token) =>
+                          course.addNote(course.id, note, token),
+                  type: _currentPage == 1 ? Type.AddExam : Type.AddNote,
+                ),
+            isScrollControlled: true);
+      },
+      child: Icon(Icons.add),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,14 +123,16 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       time: course.time,
                       group: course.group,
                     ),
-                    if(isEnrolled) ChangeNotifierProvider<Course>.value(
-                      child: CourseDetailExam(),
-                      value: course,
-                    ) ,
-                    if(isEnrolled) ChangeNotifierProvider<Course>.value(
-                      child: CourseDetailNote(),
-                      value: course,
-                    ),
+                    if (isEnrolled)
+                      ChangeNotifierProvider<Course>.value(
+                        child: CourseDetailExam(),
+                        value: course,
+                      ),
+                    if (isEnrolled)
+                      ChangeNotifierProvider<Course>.value(
+                        child: CourseDetailNote(),
+                        value: course,
+                      ),
                     ChangeNotifierProvider<Course>.value(
                       child: CourseDetailParticipants(),
                       value: course,
@@ -125,41 +176,9 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             )
           : null,
       floatingActionButton: Consumer<Auth>(
-        builder: (_, auth, child) => _currentPage == 0
-            ? FloatingActionButton(
-                child:  Icon(!isEnrolled ? FontAwesomeIcons.userPlus : FontAwesomeIcons.userMinus),
-                onPressed: !isEnrolled
-                    ? () {
-                        auth.enrollCourse(course);
-                        setState(() {
-                          isEnrolled = true;
-                        });
-                      }
-                    : () {
-                        auth.unrollCourse(course);
-                        setState(() {
-                          isEnrolled = false;
-                        });
-                      },
-              )
-            : FloatingActionButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (_) => ModalModifyExamNote(
-                            afterSave: _currentPage == 1
-                                ? (String note, DateTime dateTime,
-                                        String token) =>
-                                    course.addExam(course.id, note, dateTime, token)
-                                : (String note, String token) =>
-                                    course.addNote(course.id, note, token),
-                            type:
-                                _currentPage == 1 ? Type.AddExam : Type.AddNote,
-                          ),
-                      isScrollControlled: true);
-                },
-                child: Icon(Icons.add),
-              ),
+        builder: (_, auth, child) => Builder(
+            builder: (BuildContext ctx) =>
+                _buildFloatingActionBarButton(ctx, auth)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );

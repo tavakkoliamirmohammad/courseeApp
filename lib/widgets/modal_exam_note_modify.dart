@@ -50,6 +50,9 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
   final TextEditingController textEditingController = TextEditingController();
 
   bool _dateValid(int year, int month, int day) {
+    if(year <= 99 && year >= 0){
+      year += 1300;
+    }
     if (year == null || month == null || day == null) {
       return false;
     } else if (year < 1300 || year > 1500) {

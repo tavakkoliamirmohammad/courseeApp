@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:sess_app/models/course_note.dart';
+import 'package:sess_app/models/exam.dart';
 import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/providers/department.dart';
 import 'package:http/http.dart' as http;
@@ -13,7 +15,8 @@ class Auth with ChangeNotifier {
   String token;
   String phoneNumber;
   Department department;
-  CourseListProvider userCourseList = CourseListProvider();
+  CourseListProvider userCourseList;
+
   bool get isAuth {
     return token != null;
   }
@@ -26,8 +29,7 @@ class Auth with ChangeNotifier {
         headers: {
           'Content-Type': 'application/json',
         });
-    print("verify response");
-    print(json.decode(res.body));
+
   }
 
   Future<void> signup(
@@ -42,10 +44,9 @@ class Auth with ChangeNotifier {
         });
 
     token = json.decode(res.body)['token'];
-    if(token == null){
+    if (token == null) {
       return;
     }
-    print(json.decode(res.body));
     final updateRes =
         await http.post("http://sessapp.moarefe98.ir/profile/update/",
             body: json.encode({
@@ -77,25 +78,22 @@ class Auth with ChangeNotifier {
     token = json.decode(res.body)['token'];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', token);
-    print(json.decode(res.body));
     notifyListeners();
   }
 
-  Future<bool> autoLogin() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      print("contains key: " + prefs.containsKey("authToken").toString());
-      if (!prefs.containsKey("authToken")) {
-        return false;
-      }
+  Future<bool> autoLogin(DepartmentsProvider departments) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (!prefs.containsKey("authToken")) {
+      return false;
+    }
 
-      // add other information
-      token = prefs.getString("authToken");
-      final Map<String, dynamic> initialData = await fetchUserInitialInfo();
-      name = initialData['name'];
-//      department = departments.findById(initialData['pk']);
-      notifyListeners();
-      return true;
-
+    // add other information
+    token = prefs.getString("authToken");
+    final Map<String, dynamic> initialData = await fetchUserInitialInfo();
+    name = initialData['name'];
+    department = departments.findById(initialData['department']);
+    notifyListeners();
+    return true;
   }
 
   Future<void> logout() async {
@@ -116,8 +114,8 @@ class Auth with ChangeNotifier {
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
+    print(json.decode(res.body));
     course.enroll();
-    userCourseList.addCourse(course.id, course.title, course.teacher, course.place, course.time, course.sexuality, course.isEnrolled, course.exams, course.notes, course.group);
     notifyListeners();
   }
 
@@ -129,6 +127,7 @@ class Auth with ChangeNotifier {
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
+    print(json.decode(res.body));
     course.unroll();
   }
 
@@ -168,55 +167,73 @@ class Auth with ChangeNotifier {
     return teachersName;
   }
 
-  Future<List<Map<String, dynamic>>> fetchUserDetails() async {
-    var response = await http
-        .get("http://Sessapp.moarefe98.ir/profile", headers: {
-      "Accept": "application/json",
-      'Content-Type': 'application/json',
-      "Authorization": "Token " + token.toString(),
-    });
-//    print(token);
-    List<Course> courseList = [];
-    var userInfo = List<Map<String, dynamic>>.from(
-        jsonDecode(utf8.decode(response.bodyBytes)));
-    print(userInfo);
-    print(userInfo[0]['profiles']);
-    userInfo[0]['user_course'].forEach((courseData) {
-      Map<String, String> timePlace = _formatTimePlace(courseData['course']['time_room']);
-      courseList.add(Course(
-        id: courseData['course']['pk'],
-        time: timePlace['time'],
-        teacher: _formatTeachersName(courseData['course']['teacher']),
-        sexuality: courseData['course']['gender'],
-        place: timePlace['place'],
-        notes: courseData['course']['notes'],
-        isEnrolled: true,
-        group: int.parse(courseData['course']['group']),
-        exams: courseData['course']['exam_dates'],
-        title: courseData['course']['title'],
-      ));
-//      print(course);
-    });
-    userCourseList.userCourses = courseList;
-    notifyListeners();
-//    print("courses: " + courseList.toString());
-    print(courseList);
-    return userInfo;
+  Future<void> fetchUserDetails() async {
+    try {
+      var response =
+          await http.get("http://Sessapp.moarefe98.ir/profile", headers: {
+        "Accept": "application/json",
+        'Content-Type': 'application/json',
+        "Authorization": "Token " + token.toString(),
+      });
+      userCourseList = CourseListProvider();
+      var userInfo = List<Map<String, dynamic>>.from(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      userInfo[0]['user_course'].forEach((courseData) {
+        Map<String, String> timePlace =
+            _formatTimePlace(courseData['course']['time_room']);
+
+        List<CourseNote> notes = [];
+        List<Exam> exams = [];
+        List<Map<String, dynamic>> exNotes =
+            List<Map<String, dynamic>>.from(courseData['notes']);
+        List<Map<String, dynamic>> exExams =
+            List<Map<String, dynamic>>.from(courseData['exam_dates']);
+        notes = exNotes
+            .map((note) => CourseNote(
+                note: note['text'],
+                dateTime: DateTime.parse(note['date']),
+                id: note['pk']))
+            .toList();
+        exams = exExams
+            .map((exam) => Exam(
+                  description: exam['title'],
+                  examTime: DateTime.parse(exam['date']),
+                  id: exam['id'],
+                ))
+            .toList();
+
+        userCourseList.addCourse(
+            courseData['course']['pk'],
+            courseData['course']['title'],
+            _formatTeachersName(courseData['course']['teacher']),
+            timePlace['place'],
+            timePlace['time'],
+            courseData['course']['gender'],
+            true,
+            exams,
+            notes,
+            int.parse(courseData['course']['group']));
+
+      });
+      notifyListeners();
+    } on Exception catch (e) {
+      print(e.toString());
+    }
   }
 
-  Future<Map<String, dynamic>> fetchUserInitialInfo() async{
-    var response = await http
-        .get("http://Sessapp.moarefe98.ir/profile", headers: {
+  Future<Map<String, dynamic>> fetchUserInitialInfo() async {
+    var response =
+        await http.get("http://Sessapp.moarefe98.ir/profile", headers: {
       "Accept": "application/json",
       'Content-Type': 'application/json',
       "Authorization": "Token " + token.toString(),
     });
-    print(json.decode(utf8.decode(response.bodyBytes)));
-    return Map<String, dynamic>.from(json.decode(utf8.decode(response.bodyBytes))[0]);
+    print(json.decode(utf8.decode(response.bodyBytes))[0]);
+    return Map<String, dynamic>.from(
+        json.decode(utf8.decode(response.bodyBytes))[0]);
   }
 
   List<Course> get userCourses {
     return userCourseList.courses;
   }
-
 }
