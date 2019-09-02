@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sess_app/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/department.dart';
 import 'package:sess_app/screens/course_detail_screen.dart';
@@ -33,7 +34,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Icon(Icons.account_circle)
             ],
-          )),
+          ),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.add_a_photo),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                builder: (context) => AlertDialog(
+                  actions: <Widget>[
+                    InkWell(
+                      child: FittedBox(
+                        child: Image.asset(
+                          'assets/images/gallery.png',
+                          fit: BoxFit.cover,
+                        ),
+
+                      ),
+                      onTap: () {
+                        ImagePicker.pickImage(
+                          source: ImageSource.gallery,
+                          maxWidth: 600,
+                        );
+                      },
+                    ),
+                    InkWell(
+                      child: FittedBox(
+                        child: Image.asset(
+                          'assets/images/camera.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      onTap: () {
+                        ImagePicker.pickImage(
+                          source: ImageSource.camera,
+                          maxWidth: 600,
+                        );
+                      },
+                    ),
+                  ],
+                )
+              );
+            },
+          )
+        ],
+      ),
       drawer: MainDrawer(),
       body: FutureBuilder(
         future: Provider.of<Auth>(context, listen: false).fetchUserDetails(),

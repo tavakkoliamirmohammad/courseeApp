@@ -177,6 +177,7 @@ class Auth with ChangeNotifier {
     var userInfo = List<Map<String, dynamic>>.from(
         jsonDecode(utf8.decode(response.bodyBytes)));
     print(userInfo);
+    print(userInfo[0]['profiles']);
     userInfo[0]['user_course'].forEach((courseData) {
       Map<String, String> timePlace = _formatTimePlace(courseData['course']['time_room']);
       courseList.add(Course(

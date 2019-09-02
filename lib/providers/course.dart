@@ -146,7 +146,7 @@ class Course with ChangeNotifier {
     }
   }
 
-  Future<void> deleteExam(int id, String token) async {
+  Future<List<Map<String, dynamic>>> deleteExam(int id, String token) async {
     final res = await http
         .post("http://sessapp.moarefe98.ir/exam/delete/$id", headers: {
       "Accept": "application/json",
@@ -158,5 +158,19 @@ class Course with ChangeNotifier {
       return element.id == id;
     });
     notifyListeners();
+  }
+
+  Future<List> getProfiles(Course course, String token) async {
+    var response = await http
+        .get("http://Sessapp.moarefe98.ir/course/${course.id}", headers: {
+      "Accept": "application/json",
+      'Content-Type': 'application/json',
+      "Authorization": "Token " + token.toString(),
+    });
+    var courseDetails = List<Map<String, dynamic>>.from(
+        jsonDecode(utf8.decode(response.bodyBytes)));
+    print("profiles: " + courseDetails[0]['profiles'].toString());
+    return courseDetails[0]['profiles'];
+
   }
 }
