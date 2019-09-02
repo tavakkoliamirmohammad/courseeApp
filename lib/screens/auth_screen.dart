@@ -11,35 +11,26 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       resizeToAvoidBottomInset: false,
-      body: FutureBuilder(
-        future: Provider.of<DepartmentsProvider>(context, listen: false)
-            .fetchAndSetDepartments(),
-        builder: (_, snapshot) => snapshot.connectionState ==
-                ConnectionState.waiting
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : LayoutBuilder(
-                builder: (ctx, constraint) => SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            minWidth: constraint.maxWidth,
-                            minHeight: constraint.maxHeight),
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: LayoutBuilder(
+          builder: (ctx, constraint) => SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                      minWidth: constraint.maxWidth,
+                      minHeight: constraint.maxHeight),
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
 //                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: <Widget>[
-                              Container(
-                                child: Text("The logo"),
-                              ),
-                              AuthCard()
-                            ],
-                          ),
+                      children: <Widget>[
+                        Container(
+                          child: Text("The logo"),
                         ),
-                      ),
-                    )),
-      ),
+                        AuthCard()
+                      ],
+                    ),
+                  ),
+                ),
+              )),
     );
   }
 }

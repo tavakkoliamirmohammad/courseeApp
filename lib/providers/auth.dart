@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/providers/department.dart';
 import 'package:http/http.dart' as http;
+import 'package:sess_app/providers/departments_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sess_app/providers/course_list_provider.dart';
 
@@ -88,8 +89,10 @@ class Auth with ChangeNotifier {
       }
 
       // add other information
-
       token = prefs.getString("authToken");
+      final Map<String, dynamic> initialData = await fetchUserInitialInfo();
+      name = initialData['name'];
+//      department = departments.findById(initialData['pk']);
       notifyListeners();
       return true;
 
@@ -201,15 +204,15 @@ class Auth with ChangeNotifier {
     return userInfo;
   }
 
-  Future<List<Map<String, dynamic>>> getUserInfo() async {
+  Future<Map<String, dynamic>> fetchUserInitialInfo() async{
     var response = await http
         .get("http://Sessapp.moarefe98.ir/profile", headers: {
       "Accept": "application/json",
       'Content-Type': 'application/json',
       "Authorization": "Token " + token.toString(),
     });
-    return List<Map<String, dynamic>>.from(
-        jsonDecode(utf8.decode(response.bodyBytes)));
+    print(json.decode(utf8.decode(response.bodyBytes)));
+    return Map<String, dynamic>.from(json.decode(utf8.decode(response.bodyBytes))[0]);
   }
 
   List<Course> get userCourses {

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sess_app/providers/department.dart';
-import 'package:sess_app/providers/departments_provider.dart';
-import 'package:sess_app/screens/course_list.dart';
+import 'package:sess_app/widgets/search_input.dart' as MySearchInput;
 
-class DepartmentSearch extends SearchDelegate<Department> {
+class DepartmentSearch extends MySearchInput.SearchDelegate<Department> {
   final List<Department> departments;
 
 

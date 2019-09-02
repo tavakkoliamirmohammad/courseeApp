@@ -5,6 +5,7 @@ import 'package:sess_app/providers/department.dart';
 import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/serachDelagate/course_search.dart';
 import 'package:sess_app/widgets/course_list_item.dart';
+import 'package:sess_app/widgets/search_input.dart' as MySearchInput;
 
 class CourseList extends StatelessWidget {
   static final routeName = "/course-list-screen";
@@ -23,12 +24,15 @@ class CourseList extends StatelessWidget {
                   ),
                 )
               : Scaffold(
+                  resizeToAvoidBottomPadding: false,
                   appBar: AppBar(
                     actions: <Widget>[
                       IconButton(
                           icon: Icon(Icons.search),
                           onPressed: () {
-                            showSearch(
+                            MySearchInput.showSearch(
+                              cursorColor: Theme.of(context).accentColor,
+                              hintText: "جست و جو",
                                     context: context,
                                     delegate: CourseSearch(
                                         courses: department.courses.courses))
@@ -50,7 +54,7 @@ class CourseList extends StatelessWidget {
                     elevation: 0,
                   ),
                   body: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                           maxCrossAxisExtent: 250,

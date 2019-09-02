@@ -25,4 +25,10 @@ class DepartmentsProvider with ChangeNotifier {
     print(_departments.length);
     notifyListeners();
   }
+
+  Department findById(int id){
+    return _departments.firstWhere((department){
+      return department.id == id;
+    });
+  }
 }

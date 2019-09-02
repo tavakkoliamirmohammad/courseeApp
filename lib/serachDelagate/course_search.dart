@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:sess_app/providers/course.dart';
+import 'package:sess_app/widgets/search_input.dart' as MySearchInput;
 
-class CourseSearch extends SearchDelegate<Course> {
+class CourseSearch extends MySearchInput.SearchDelegate<Course> {
   final List<Course> courses;
 
   CourseSearch({@required this.courses});

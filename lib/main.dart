@@ -11,7 +11,9 @@ import 'package:sess_app/screens/profile_screen.dart';
 import 'package:sess_app/providers/course_list_provider.dart';
 
 void main() {
-  SystemChrome.setEnabledSystemUIOverlays([],);
+  SystemChrome.setEnabledSystemUIOverlays(
+    [],
+  );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());
@@ -24,9 +26,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: DepartmentsProvider()),
-        ChangeNotifierProvider.value(value: Auth()),
-        ChangeNotifierProvider.value(value: CourseListProvider())
+        ChangeNotifierProvider<DepartmentsProvider>.value(
+            value: DepartmentsProvider()),
+        ChangeNotifierProvider<Auth>.value(value: Auth()),
       ],
       child: MaterialApp(
         title: 'Coursee',
@@ -40,16 +42,7 @@ class MyApp extends StatelessWidget {
               body1: TextStyle(color: Colors.white),
               subtitle: TextStyle(color: Colors.grey)),
         ),
-        home: Consumer<Auth>(builder: (_, auth, __) {
-          return auth.isAuth
-              ? DepartmentScreen()
-              : FutureBuilder(
-              future:  auth.autoLogin(),
-              builder: (_, snapshot) =>
-              snapshot.connectionState == ConnectionState.waiting
-                  ? Center(child: CircularProgressIndicator())
-                  : AuthScreen());
-        }),
+        home: HomePage(),
         routes: {
           AuthScreen.routeName: (_) => AuthScreen(),
           DepartmentScreen.routeName: (_) => DepartmentScreen(),
@@ -59,6 +52,32 @@ class MyApp extends StatelessWidget {
         },
         debugShowCheckedModeBanner: false,
       ),
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Provider.of<DepartmentsProvider>(context, listen: false)
+          .fetchAndSetDepartments(),
+      builder: (_, snapshot) => snapshot.connectionState ==
+              ConnectionState.waiting
+          ? Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            )
+          : (Consumer<Auth>(
+              builder: (_, auth, __) => auth.isAuth
+                  ? DepartmentScreen()
+                  : FutureBuilder(
+                      future: auth.autoLogin(),
+                      builder: (_, snapshot) => snapshot.connectionState ==
+                              ConnectionState.waiting
+                          ? Scaffold(
+                              body: Center(child: CircularProgressIndicator()),
+                            )
+                          : AuthScreen()))),
     );
   }
 }
