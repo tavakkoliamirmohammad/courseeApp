@@ -9,6 +9,7 @@ import 'package:sess_app/screens/course_list.dart';
 import 'package:sess_app/screens/department_screen.dart';
 
 void main() {
+  SystemChrome.setEnabledSystemUIOverlays([],);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());

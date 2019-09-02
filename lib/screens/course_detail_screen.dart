@@ -46,7 +46,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(isEnrolled);
     return Scaffold(
       body: Container(
         child: Column(
@@ -74,11 +73,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       time: course.time,
                       group: course.group,
                     ),
-                    ChangeNotifierProvider<Course>.value(
+                    if(isEnrolled) ChangeNotifierProvider<Course>.value(
                       child: CourseDetailExam(),
                       value: course,
-                    ),
-                    ChangeNotifierProvider<Course>.value(
+                    ) ,
+                    if(isEnrolled) ChangeNotifierProvider<Course>.value(
                       child: CourseDetailNote(),
                       value: course,
                     ),
