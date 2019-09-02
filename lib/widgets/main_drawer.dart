@@ -5,6 +5,7 @@ import 'package:sess_app/main.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/screens/auth_screen.dart';
 import 'package:sess_app/screens/department_screen.dart';
+import 'package:sess_app/screens/profile_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _drawerItemBuilder(String title, IconData icon, Function callback) {
@@ -30,6 +31,12 @@ class MainDrawer extends StatelessWidget {
               color: Colors.blue,
             ),
           ),
+          _drawerItemBuilder("پروفایل", Icons.account_circle, () {
+            Navigator.of(context).pushReplacementNamed(
+              ProfileScreen.routeName,
+            );
+          }),
+          Divider(),
           _drawerItemBuilder("درس های من", FontAwesomeIcons.bookOpen, () {}),
           Divider(),
           _drawerItemBuilder(

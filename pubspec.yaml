@@ -48,9 +48,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
+    # To add assets to your application, add an assets section, like this:
+  assets:
+      - assets/images/user.png
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -65,11 +65,11 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-   - family: iransans
-     fonts:
-       - asset: fonts/iransans.ttf
-       - asset: fonts/iransans_bold.ttf
-         weight: 700
+    - family: iransans
+      fonts:
+        - asset: fonts/iransans.ttf
+        - asset: fonts/iransans_bold.ttf
+          weight: 700
 
 
   # For details regarding fonts from package dependencies,

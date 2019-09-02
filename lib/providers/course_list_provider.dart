@@ -32,4 +32,14 @@ class CourseListProvider with ChangeNotifier {
     ));
     notifyListeners();
   }
+
+  void getCourses() {
+    var _courseList = [];
+    _courses.forEach((course) {
+      _courseList.add(course);
+    });
+    _courses = _courseList;
+    notifyListeners();
+
+  }
 }
