@@ -85,11 +85,12 @@ class CourseDetailExam extends StatelessWidget {
                           gregorian: course.exams[i].examTime.toString());
                       return ModalModifyExamNote(
                         afterSave:
-                            (String note, DateTime dateTime, String token) =>
+                            (String note, DateTime dateTime, double grade, String token) =>
                                 course.editExam(
                           course.exams[i].id,
                           note,
                           dateTime,
+                          grade,
                           token,
                         ),
                         type: Type.EditExam,
@@ -100,6 +101,7 @@ class CourseDetailExam extends StatelessWidget {
                           "day": dateTime.day.toString(),
                           "hour": dateTime.hour.toString(),
                           "minute": dateTime.minute.toString(),
+                          'grade': course.exams[i].grade.toString(),
                         },
                       );
                     },

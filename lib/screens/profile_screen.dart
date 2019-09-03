@@ -163,7 +163,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Consumer<Auth>(
                   builder: (context, auth, child) => Container(
                     margin: EdgeInsets.only(top: 30),
-                    height: 400,
+                    height: 200,
                     child: ListView.builder(
                       itemBuilder: (context, index) => Column(
                         children: <Widget>[

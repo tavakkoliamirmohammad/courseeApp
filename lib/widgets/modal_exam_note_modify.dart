@@ -26,7 +26,8 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
     'month': '',
     'day': '',
     'hour': '',
-    'minute': ''
+    'minute': '',
+    'grade': '',
   };
   var isinit = false;
 
@@ -42,6 +43,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
       info['day'] = widget.initialInfo['day'];
       info['hour'] = widget.initialInfo['hour'];
       info['minute'] = widget.initialInfo['minute'];
+      info['grade'] = widget.initialInfo['grade'];
     }
     isinit = true;
     super.didChangeDependencies();
@@ -98,7 +100,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
           .add(Duration(
               hours: int.parse(info['hour']),
               minutes: int.parse(info['minute'])));
-      widget.afterSave(info['description'], date, auth.token);
+      widget.afterSave(info['description'], date, double.parse(info['grade']), auth.token);
     } else if (widget.type == Type.AddNote || widget.type == Type.EditNote) {
       widget.afterSave(info['description'], auth.token);
     }
@@ -288,6 +290,29 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                       ],
                     )
                   : Container(),
+              SizedBox(
+                height: 15,
+              ),
+              Text(
+                'نمره',
+                textDirection: TextDirection.rtl,
+              ),
+              SizedBox(
+                height: 15,
+              ),
+              _buildDateInput(
+                'نمره',
+                (String value) {
+                  if (double.parse(value) == null || double.parse(value) < 0) {
+                    return 'نامعتبر';
+                  }
+                  return null;
+                },
+                info['grade'],
+                (value) {
+                  info['grade'] = value;
+                }
+              ),
               SizedBox(
                 height: 20,
               ),

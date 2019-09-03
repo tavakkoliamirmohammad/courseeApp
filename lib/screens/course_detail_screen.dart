@@ -82,8 +82,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             context: context,
             builder: (_) => ModalModifyExamNote(
                   afterSave: _currentPage == 1
-                      ? (String note, DateTime dateTime, String token) =>
-                          course.addExam(course.id, note, dateTime, token)
+                      ? (String note, DateTime dateTime, double grade, String token) =>
+                          course.addExam(course.id, note, dateTime, grade, token)
                       : (String note, String token) =>
                           course.addNote(course.id, note, token),
                   type: _currentPage == 1 ? Type.AddExam : Type.AddNote,

@@ -179,10 +179,10 @@ class Auth with ChangeNotifier {
       userCourseList = CourseListProvider();
       var userInfo = List<Map<String, dynamic>>.from(
           jsonDecode(utf8.decode(response.bodyBytes)));
+      print("userInfo: " + userInfo[0]['user_course'].toString());
       userInfo[0]['user_course'].forEach((courseData) {
         Map<String, String> timePlace =
             _formatTimePlace(courseData['course']['time_room']);
-
         List<CourseNote> notes = [];
         List<Exam> exams = [];
         List<Map<String, dynamic>> exNotes =
@@ -199,6 +199,7 @@ class Auth with ChangeNotifier {
             .map((exam) => Exam(
                   description: exam['title'],
                   examTime: DateTime.parse(exam['date']),
+                  grade: exam['grade'],
                   id: exam['id'],
                 ))
             .toList();
@@ -214,7 +215,6 @@ class Auth with ChangeNotifier {
             exams,
             notes,
             int.parse(courseData['course']['group']));
-
       });
       notifyListeners();
     } on Exception catch (e) {

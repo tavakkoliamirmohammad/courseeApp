@@ -102,7 +102,7 @@ class Course with ChangeNotifier {
   }
 
   Future<void> addExam(
-      int courseId, String description, DateTime time, String token) async {
+      int courseId, String description, DateTime time, double grade, String token) async {
     final res =
         await http.post("http://sessapp.moarefe98.ir/exam/create/$courseId",
             body: json.encode({
@@ -119,17 +119,18 @@ class Course with ChangeNotifier {
     exams.add(Exam(
         id: json.decode(res.body)['pk'],
         description: description,
+        grade: grade,
         examTime: time));
     notifyListeners();
   }
 
   Future<void> editExam(
-      int id, String description, DateTime time, String token) async {
+      int id, String description, DateTime time, double grade, String token) async {
     final res = await http.post("http://sessapp.moarefe98.ir/exam/update/$id",
         body: json.encode({
           "title": description,
           "date": time.toIso8601String(),
-          "grade": "0",
+          "grade": grade,
         }),
         headers: {
           "Accept": "application/json",
@@ -141,7 +142,7 @@ class Course with ChangeNotifier {
       return element.id == id;
     });
     if (index >= 0) {
-      exams[index] = Exam(description: description, examTime: time, id: id);
+      exams[index] = Exam(description: description, examTime: time, grade: grade, id: id);
       notifyListeners();
     }
   }
