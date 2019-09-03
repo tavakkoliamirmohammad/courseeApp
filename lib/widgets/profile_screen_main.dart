@@ -24,6 +24,7 @@ class ProfileScreenMain extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/shiraz-uni.jpg',
                       fit: BoxFit.cover,
+                      alignment: Alignment.center,
                     )),
                 Positioned(
                     bottom: -30,

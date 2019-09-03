@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:sess_app/providers/departments_provider.dart';
 import 'package:sess_app/widgets/auth_card.dart';
 
 class AuthScreen extends StatelessWidget {

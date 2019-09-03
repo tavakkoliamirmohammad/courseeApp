@@ -90,7 +90,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
       return;
     }
 
-    info['day'] =
+    info['year'] =
         (int.parse(info['year']) <= 99 && int.parse(info['year']) >= 0)
             ? (int.parse(info['year']) + 1300).toString()
             : info['year'];
