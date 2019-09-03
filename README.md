@@ -1,4 +1,4 @@
-# sess_app
+# Coursee App
 
 A new Flutter project.
 
