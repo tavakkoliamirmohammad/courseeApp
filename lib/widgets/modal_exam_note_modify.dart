@@ -50,7 +50,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
   final TextEditingController textEditingController = TextEditingController();
 
   bool _dateValid(int year, int month, int day) {
-    if(year <= 99 && year >= 0){
+    if (year <= 99 && year >= 0) {
       year += 1300;
     }
     if (year == null || month == null || day == null) {
@@ -90,6 +90,10 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
       return;
     }
 
+    info['day'] =
+        (int.parse(info['year']) <= 99 && int.parse(info['year']) >= 0)
+            ? (int.parse(info['year']) + 1300).toString()
+            : info['year'];
     final auth = Provider.of<Auth>(context, listen: false);
     if (widget.type == Type.AddExam || widget.type == Type.EditExam) {
       final date = Jalali(int.parse(info['year']), int.parse(info['month']),

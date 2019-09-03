@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
@@ -175,14 +177,20 @@ class _AuthCardState extends State<AuthCard> {
     });
     _form.currentState.save();
     final departments = Provider.of<Auth>(context, listen: false);
-    await departments.getVerificationCode(
-        info['phone'], userState == UserState.Signup ? "signup/" : "login/");
-    final code = await _showCheckVerificationDialog();
-    if (userState == UserState.Signup) {
-      await departments.signup(
-          info['phone'], code, info['name'], info['dep'].id.toString());
-    } else {
-      await departments.login(info['phone'], code);
+    try{
+      await departments.getVerificationCode(
+          info['phone'], userState == UserState.Signup ? "signup/" : "login/");
+      final code = await _showCheckVerificationDialog();
+      print(code);
+      if (userState == UserState.Signup) {
+        await departments.signup(
+            info['phone'], code, info['name'], info['dep'].id.toString());
+      } else {
+        await departments.login(info['phone'], code);
+      }
+    }
+    on HttpException catch (e){
+      _showMessageDialog(e.message);
     }
     setState(() {
       isLoading = false;

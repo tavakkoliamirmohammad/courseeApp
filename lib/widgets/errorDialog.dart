@@ -10,9 +10,18 @@ class ErrorDialog extends StatelessWidget {
     return AlertDialog(
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(20))),
-      title: Text(
-        "خطا",
+      title:
+      Row(
         textDirection: TextDirection.rtl,
+        children: <Widget>[
+          Icon(Icons.error_outline),
+          SizedBox(width: 10,),
+          Text(
+            "خطا",
+            textDirection: TextDirection.rtl,
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,

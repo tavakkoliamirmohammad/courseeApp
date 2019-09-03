@@ -375,6 +375,8 @@ class _SearchPageState<T> extends State<_SearchPage<T>> {
       label: routeName,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
           iconTheme: theme.primaryIconTheme,
           textTheme: theme.primaryTextTheme,
           leading: widget.delegate.buildLeading(context),

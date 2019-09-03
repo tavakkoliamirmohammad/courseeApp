@@ -30,7 +30,10 @@ class Auth with ChangeNotifier {
         headers: {
           'Content-Type': 'application/json',
         });
-
+    final extractedResponse = json.decode(utf8.decode(res.bodyBytes));
+    if (extractedResponse['status'] != 200) {
+      throw HttpException(extractedResponse['text']);
+    }
   }
 
   Future<void> signup(
@@ -43,24 +46,24 @@ class Auth with ChangeNotifier {
         headers: {
           'Content-Type': 'application/json',
         });
-
+    if (json.decode(res.body)['non_field_errors'] != null) {
+      throw HttpException("کد وارد شده معتیر نمی باشد. لطفا دوباره سعی کنید.");
+    }
     token = json.decode(res.body)['token'];
     if (token == null) {
       return;
     }
-    final updateRes =
-        await http.post("http://sessapp.moarefe98.ir/profile/update/",
-            body: json.encode({
-              "name": name,
-              "department": departmentId,
-              "picture": "",
-            }),
-            headers: {
+    await http.post("http://sessapp.moarefe98.ir/profile/update/",
+        body: json.encode({
+          "name": name,
+          "department": departmentId,
+          "picture": "",
+        }),
+        headers: {
           "Accept": "application/json",
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', token);
     notifyListeners();
@@ -75,7 +78,9 @@ class Auth with ChangeNotifier {
         headers: {
           'Content-Type': 'application/json',
         });
-
+    if (json.decode(res.body)['non_field_errors'] != null) {
+      throw HttpException("کد وارد شده معتیر نمی باشد. لطفا دوباره سعی کنید.");
+    }
     token = json.decode(res.body)['token'];
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('authToken', token);
@@ -89,7 +94,7 @@ class Auth with ChangeNotifier {
     }
     // add other information
     token = prefs.getString("authToken");
-    final Map<String, dynamic> initialData = await fetchUserInitialInfo();;
+    final Map<String, dynamic> initialData = await fetchUserInitialInfo();
     name = initialData['name'];
     department = departments.findById(initialData['department']);
     image = initialData['picture'];
@@ -108,27 +113,25 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> enrollCourse(Course course) async {
-    final res = await http.post(
+    await http.post(
         "http://sessapp.moarefe98.ir/usercourse/create/${course.id}",
         headers: {
           "Accept": "application/json",
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-    print(json.decode(res.body));
     course.enroll();
     notifyListeners();
   }
 
   Future<void> unrollCourse(Course course) async {
-    final res = await http.post(
+    await http.post(
         "http://Sessapp.moarefe98.ir/usercourse/delete/${course.id}",
         headers: {
           "Accept": "application/json",
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-    print(json.decode(res.body));
     course.unroll();
   }
 
@@ -179,6 +182,7 @@ class Auth with ChangeNotifier {
       userCourseList = CourseListProvider();
       var userInfo = List<Map<String, dynamic>>.from(
           jsonDecode(utf8.decode(response.bodyBytes)));
+
       userInfo[0]['user_course'].forEach((courseData) {
         Map<String, String> timePlace =
             _formatTimePlace(courseData['course']['time_room']);
@@ -214,37 +218,33 @@ class Auth with ChangeNotifier {
             exams,
             notes,
             int.parse(courseData['course']['group']));
-
       });
       notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
     }
   }
+
   Future upload(File imageFile) async {
     if (imageFile == null) {
-      print("reached");
       return;
     }
     String base64Image = base64Encode(imageFile.readAsBytesSync());
-    print('baseImg: ' + base64Image);
-//    String fileName = imageFile.path.split("/").last;
-    final response = await http.post(
-        'http://sessapp.moarefe98.ir/profile/update/',
-        body: json.encode({
-          'name': name,
-          'phone': phoneNumber,
-          'picture': base64Image,
-          'department': department.id,
-        }),
-        headers: {
+    final response =
+        await http.post('http://sessapp.moarefe98.ir/profile/update/',
+            body: json.encode({
+              'name': name,
+              'phone': phoneNumber,
+              'picture': base64Image,
+              'department': department.id,
+            }),
+            headers: {
           "Accept": "application/json",
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
-        }
-    );
-
-    print("response: " + response.body.toString());
+        });
+    image = base64Image;
+    print(json.decode(response.body));
   }
 
   Future<Map<String, dynamic>> fetchUserInitialInfo() async {
@@ -254,7 +254,6 @@ class Auth with ChangeNotifier {
       'Content-Type': 'application/json',
       "Authorization": "Token " + token.toString(),
     });
-    print(json.decode(utf8.decode(response.bodyBytes))[0]);
     return Map<String, dynamic>.from(
         json.decode(utf8.decode(response.bodyBytes))[0]);
   }

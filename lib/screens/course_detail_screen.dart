@@ -73,7 +73,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       );
     }
 
-    if (_currentPage == 3) {
+    if (_currentPage == 3 || !isEnrolled) {
       return Container();
     }
     return FloatingActionButton(
@@ -144,8 +144,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: isEnrolled
-          ? BottomNavigationBar(
+      bottomNavigationBar: BottomNavigationBar(
               elevation: 0,
               unselectedItemColor: Colors.white,
               selectedItemColor: Theme.of(context).accentColor,
@@ -160,21 +159,20 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   icon: Icon(Icons.home),
                   title: Text("توضیحات"),
                 ),
-                BottomNavigationBarItem(
+                if(isEnrolled) BottomNavigationBarItem(
                   icon: Icon(Icons.assignment_ind),
                   title: Text("امتحانات"),
-                ),
-                BottomNavigationBarItem(
+                ) ,
+                if(isEnrolled) BottomNavigationBarItem(
                   icon: Icon(FontAwesomeIcons.stickyNote),
                   title: Text("یادداشت ها"),
-                ),
+                ) ,
                 BottomNavigationBarItem(
                   icon: Icon(Icons.people),
                   title: Text('دانشجویان'),
                 ),
               ],
-            )
-          : null,
+            ),
       floatingActionButton: Consumer<Auth>(
         builder: (_, auth, child) => Builder(
             builder: (BuildContext ctx) =>

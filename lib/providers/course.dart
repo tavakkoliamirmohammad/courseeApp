@@ -146,7 +146,7 @@ class Course with ChangeNotifier {
     }
   }
 
-  Future<List<Map<String, dynamic>>> deleteExam(int id, String token) async {
+  Future<void> deleteExam(int id, String token) async {
     final res = await http
         .post("http://sessapp.moarefe98.ir/exam/delete/$id", headers: {
       "Accept": "application/json",
