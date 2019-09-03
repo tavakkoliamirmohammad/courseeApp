@@ -243,7 +243,6 @@ class Auth with ChangeNotifier {
           "Authorization": "Token " + token.toString(),
         }
     );
-
     print("response: " + response.body.toString());
   }
 
