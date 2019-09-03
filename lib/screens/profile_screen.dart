@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:sess_app/widgets/main_drawer.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +16,21 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  File _imageFile;
+
+  Future<void> _choosePicture(ImageSource source) async {
+    File selectedFile = await ImagePicker.pickImage(
+      source: source,
+      maxWidth: 600,
+    );
+    setState(() {
+      _imageFile = selectedFile;
+
+    });
+    print('here');
+    print(_imageFile);
+  }
+
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
@@ -42,37 +60,65 @@ class _ProfileScreenState extends State<ProfileScreen> {
               showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                        actions: <Widget>[
-                          InkWell(
-                            child: FittedBox(
-                              child: Image.asset(
-                                'assets/images/gallery.png',
-                                fit: BoxFit.cover,
+                    content: Consumer<Auth>(
+                      builder: (context, auth, child) => Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: <Widget>[
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              IconButton(
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await _choosePicture(ImageSource.gallery);
+                                  print(
+                                      'next check' + _imageFile.toString());
+                                  auth.upload(_imageFile).then((value) {
+                                    print('value: ' + value.toString());
+                                  }).catchError((error) {
+                                    print("error: " + error.toString());
+                                  });
+                                },
+                                icon: Icon(
+                                  Icons.photo,
+                                ),
                               ),
-                            ),
-                            onTap: () {
-                              ImagePicker.pickImage(
-                                source: ImageSource.gallery,
-                                maxWidth: 600,
-                              );
-                            },
+                              Text(
+                                'گالری',
+                                textDirection: TextDirection.rtl,
+                              ),
+                            ],
                           ),
-                          InkWell(
-                            child: FittedBox(
-                              child: Image.asset(
-                                'assets/images/camera.png',
-                                fit: BoxFit.cover,
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              IconButton(
+                                icon: Icon(Icons.camera),
+                                onPressed: () async {
+                                  Navigator.of(context).pop();
+                                  await _choosePicture(ImageSource.camera);
+                                  print('next check: ' +
+                                      _imageFile.toString());
+                                  await auth.upload(_imageFile);
+                                },
                               ),
-                            ),
-                            onTap: () {
-                              ImagePicker.pickImage(
-                                source: ImageSource.camera,
-                                maxWidth: 600,
-                              );
-                            },
+                              Text(
+                                'دوربین',
+                                textDirection: TextDirection.rtl,
+                              ),
+                            ],
                           ),
                         ],
-                      ));
+                      ),
+                    ),
+                    title: Text(
+                      'انتخاب',
+                      textDirection: TextDirection.rtl,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ));
             },
           )
         ],
@@ -80,66 +126,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
       drawer: MainDrawer(),
       body: FutureBuilder(
         future: Provider.of<Auth>(context, listen: false).fetchUserDetails(),
-        builder: (context, snapshot) =>
-            snapshot.connectionState == ConnectionState.waiting
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : SingleChildScrollView(
-                    child: Consumer<Auth>(
-                        builder: (context, auth, child) => Column(
-                              children: <Widget>[
-                                Card(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          width: 50,
-                                          height: 50,
-                                          child: CircleAvatar(
-                                            backgroundImage: AssetImage(
-                                              'assets/images/user.png',
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 10,
-                                        ),
-                                        Text(auth.name),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Container(
-                                  height: deviceSize.height * 0.5,
-                                  child: ListView.builder(
-                                    itemBuilder: (context, index) => Column(
-                                      children: <Widget>[
-                                        ListTile(
-                                          onTap: () {
-                                            Navigator.of(context).pushNamed(
-                                                CourseDetailScreen.routeName,
-                                                arguments: auth.userCourses
-                                                    .firstWhere((course) =>
-                                                        course.id ==
-                                                        auth.userCourses[index]
-                                                            .id));
-                                          },
-                                          title: Text(
-                                            auth.userCourses[index].title,
-                                            textDirection: TextDirection.rtl,
-                                          ),
-                                        ),
-                                        Divider(),
-                                      ],
-                                    ),
-                                    itemCount: auth.userCourses.length,
-                                  ),
-                                ),
-                              ],
-                            )),
+        builder: (context, snapshot) => snapshot.connectionState ==
+            ConnectionState.waiting
+            ? Center(
+          child: CircularProgressIndicator(),
+        )
+            : SingleChildScrollView(
+          child: Consumer<Auth>(
+            builder: (context, auth, child) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Stack(
+                  alignment: Alignment.bottomCenter,
+                  overflow: Overflow.visible,
+                  children: <Widget>[
+                    Container(
+                        width: double.infinity,
+                        height: 200,
+                        color: Colors.lightBlueAccent,
+                        child: Image.asset(
+                          'assets/images/shiraz-uni.png',
+                          fit: BoxFit.cover,
+                        )),
+                    Positioned(
+                        bottom: -30,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundImage: (auth.image == null || auth.image.isEmpty) ? AssetImage(
+                            'assets/images/avatar.png',
+                          ) : MemoryImage(
+                            base64.decode(auth.image),
+                          )
+                        )),
+                  ],
+                ),
+                Consumer<Auth>(
+                  builder: (context, auth, child) => Container(
+                    margin: EdgeInsets.only(top: 30),
+                    height: 400,
+                    child: ListView.builder(
+                      itemBuilder: (context, index) => Column(
+                        children: <Widget>[
+                          ListTile(
+                            onTap: () {
+                              Navigator.of(context).pushNamed(
+                                  CourseDetailScreen.routeName,
+                                  arguments: auth.userCourses.firstWhere(
+                                          (course) =>
+                                      course.id ==
+                                          auth.userCourses[index].id));
+                            },
+                            title: Text(
+                              auth.userCourses[index].title,
+                              textDirection: TextDirection.rtl,
+                            ),
+                            subtitle: Text(
+                              auth.userCourses[index].time,
+                            ),
+                          ),
+                          Divider(),
+                        ],
+                      ),
+                      itemCount: auth.userCourses.length,
+                    ),
                   ),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

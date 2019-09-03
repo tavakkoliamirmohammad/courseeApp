@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:convert';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/providers/auth.dart';
@@ -38,11 +39,9 @@ class CourseDetailParticipants extends StatelessWidget {
                         textDirection: TextDirection.rtl,
                       ),
                       trailing: CircleAvatar(
-                        backgroundImage: AssetImage(
-                          snapshot.data[index]['picture'] == null
-                              ? 'assets/images/avatar.png'
-                              : 'assets/images/user.png',
-                        ),
+                        backgroundImage: (snapshot.data[index]['picture'] == null || snapshot.data[index]['picture'].isEmpty) ? AssetImage(
+                          'assets/images/avatar.png'
+                        ) : MemoryImage(base64.decode(snapshot.data[index]['picture'])),
                       ),
                     )),
                 itemCount: snapshot.data.length,

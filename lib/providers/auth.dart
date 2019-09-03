@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sess_app/models/course_note.dart';
 import 'package:sess_app/models/exam.dart';
@@ -13,6 +13,7 @@ import 'package:sess_app/providers/course_list_provider.dart';
 class Auth with ChangeNotifier {
   String name;
   String token;
+  String image;
   String phoneNumber;
   Department department;
   CourseListProvider userCourseList;
@@ -86,12 +87,12 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey("authToken")) {
       return false;
     }
-
     // add other information
     token = prefs.getString("authToken");
-    final Map<String, dynamic> initialData = await fetchUserInitialInfo();
+    final Map<String, dynamic> initialData = await fetchUserInitialInfo();;
     name = initialData['name'];
     department = departments.findById(initialData['department']);
+    image = initialData['picture'];
     notifyListeners();
     return true;
   }
@@ -219,6 +220,31 @@ class Auth with ChangeNotifier {
     } on Exception catch (e) {
       print(e.toString());
     }
+  }
+  Future upload(File imageFile) async {
+    if (imageFile == null) {
+      print("reached");
+      return;
+    }
+    String base64Image = base64Encode(imageFile.readAsBytesSync());
+    print('baseImg: ' + base64Image);
+//    String fileName = imageFile.path.split("/").last;
+    final response = await http.post(
+        'http://sessapp.moarefe98.ir/profile/update/',
+        body: json.encode({
+          'name': name,
+          'phone': phoneNumber,
+          'picture': base64Image,
+          'department': department.id,
+        }),
+        headers: {
+          "Accept": "application/json",
+          'Content-Type': 'application/json',
+          "Authorization": "Token " + token.toString(),
+        }
+    );
+
+    print("response: " + response.body.toString());
   }
 
   Future<Map<String, dynamic>> fetchUserInitialInfo() async {
