@@ -122,6 +122,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       teacher: course.teacher,
                       time: course.time,
                       group: course.group,
+                      examTime: course.examTime,
                     ),
                     if (isEnrolled)
                       ChangeNotifierProvider<Course>.value(

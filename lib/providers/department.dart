@@ -115,7 +115,7 @@ class Department with ChangeNotifier {
             isEnrolled,
             exams,
             notes,
-            int.parse(course['group']));
+            int.parse(course['group']), course['final_time']);
       });
     } catch (e) {
       print(e.toString());

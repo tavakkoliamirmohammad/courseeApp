@@ -206,7 +206,6 @@ class Auth with ChangeNotifier {
                   id: exam['id'],
                 ))
             .toList();
-
         userCourseList.addCourse(
             courseData['course']['pk'],
             courseData['course']['title'],
@@ -217,7 +216,8 @@ class Auth with ChangeNotifier {
             true,
             exams,
             notes,
-            int.parse(courseData['course']['group']));
+            int.parse(courseData['course']['group']),
+            courseData['course']['final_time']);
       });
       notifyListeners();
     } on Exception catch (e) {

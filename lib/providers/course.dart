@@ -13,6 +13,7 @@ class Course with ChangeNotifier {
   final String sexuality;
   final String time;
   final int group;
+  final String examTime;
   bool isEnrolled = false;
 
   List<CourseNote> notes;
@@ -28,7 +29,8 @@ class Course with ChangeNotifier {
       @required this.isEnrolled,
       @required this.notes,
       @required this.exams,
-      @required this.group});
+      @required this.group,
+      @required this.examTime});
 
   void enroll() {
     this.isEnrolled = true;

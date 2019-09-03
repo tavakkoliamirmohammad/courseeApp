@@ -16,8 +16,18 @@ class CourseListProvider with ChangeNotifier {
     });
   }
 
-  void addCourse(int id, String title, String teacher, String place,
-      String time, String sexuality, bool isEnrolled, List<Exam> exams, List<CourseNote> notes, int group) {
+  void addCourse(
+      int id,
+      String title,
+      String teacher,
+      String place,
+      String time,
+      String sexuality,
+      bool isEnrolled,
+      List<Exam> exams,
+      List<CourseNote> notes,
+      int group,
+      String examTime) {
     _courses.add(Course(
       id: id,
       title: title,
@@ -29,6 +39,7 @@ class CourseListProvider with ChangeNotifier {
       exams: exams,
       notes: notes,
       group: group,
+      examTime: examTime
     ));
     notifyListeners();
   }
@@ -36,5 +47,4 @@ class CourseListProvider with ChangeNotifier {
   set userCourses(List<Course> courseList) {
     _courses = courseList;
   }
-
 }
