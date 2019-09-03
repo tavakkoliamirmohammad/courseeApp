@@ -8,6 +8,7 @@ class CourseDetailList extends StatelessWidget {
   final String time;
   final String sexulaity;
   final int group;
+  final String examTime;
 
 
   CourseDetailList({
@@ -16,6 +17,7 @@ class CourseDetailList extends StatelessWidget {
     @required this.place,
     @required this.sexulaity,
     @required this.group,
+    @required this.examTime,
   });
 
   @override
@@ -41,6 +43,11 @@ class CourseDetailList extends StatelessWidget {
           title: "ساعت کلاس",
           subtitle: time,
           icon: Icons.access_time,
+        ),
+        CourseDetailItem(
+          title: "تاریخ امتحان",
+          subtitle: examTime,
+          icon: Icons.calendar_today,
         ),
         CourseDetailItem(
           title: "جنسیت",

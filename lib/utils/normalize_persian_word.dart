@@ -1,0 +1,60 @@
+String normalizePersianWord(String input) => input
+    .replaceAll('ک', 'ك')
+    .replaceAll('دِ', 'د')
+    .replaceAll('بِ', 'ب')
+    .replaceAll(
+  'زِ',
+  'ز',
+)
+    .replaceAll(
+  'ذِ',
+  'ذ',
+)
+    .replaceAll(
+  'شِ',
+  'ش',
+)
+    .replaceAll(
+  'س',
+  'س',
+)
+    .replaceAll(
+  '١',
+  '۱',
+)
+    .replaceAll(
+  '٢',
+  '۲',
+)
+    .replaceAll(
+  '٣',
+  '۳',
+)
+    .replaceAll(
+  '٤',
+  '۴',
+)
+    .replaceAll(
+  '٥',
+  '۵',
+)
+    .replaceAll(
+  '٦',
+  '۶',
+)
+    .replaceAll(
+  '٧',
+  '۷',
+)
+    .replaceAll(
+  '٨',
+  '۸',
+)
+    .replaceAll(
+  '٩',
+  '۹',
+)
+    .replaceAll(
+  '٠',
+  '۰',
+);

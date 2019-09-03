@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:sess_app/main.dart';
 import 'package:sess_app/providers/auth.dart';
-import 'package:sess_app/screens/auth_screen.dart';
 import 'package:sess_app/screens/department_screen.dart';
 import 'package:sess_app/screens/profile_screen.dart';
 
@@ -28,7 +26,7 @@ class MainDrawer extends StatelessWidget {
           DrawerHeader(
             child: Text('Drawer Header'),
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Theme.of(context).accentColor,
             ),
           ),
           _drawerItemBuilder("پروفایل", Icons.account_circle, () {
@@ -36,8 +34,6 @@ class MainDrawer extends StatelessWidget {
               ProfileScreen.routeName,
             );
           }),
-          Divider(),
-          _drawerItemBuilder("درس های من", FontAwesomeIcons.bookOpen, () {}),
           Divider(),
           _drawerItemBuilder(
               "بخش ها",

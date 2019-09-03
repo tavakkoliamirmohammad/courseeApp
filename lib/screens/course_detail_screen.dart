@@ -58,8 +58,25 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   isEnrolled = true;
                 });
                 Scaffold.of(ctx).removeCurrentSnackBar();
-                Scaffold.of(ctx)
-                    .showSnackBar(SnackBar(content: Text("درس اضافه شد")));
+                Scaffold.of(ctx).showSnackBar(SnackBar(
+                  content: Row(
+                    textDirection: TextDirection.rtl,
+                    children: <Widget>[
+                      Icon(
+                        Icons.add,
+                        color: Colors.green,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "به درس های شما اضافه شد",
+                        textDirection: TextDirection.rtl,
+                      ),
+                    ],
+                  ),
+                  duration: Duration(seconds: 1),
+                ));
               }
             : () {
                 auth.unrollCourse(course);
@@ -67,13 +84,30 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                   isEnrolled = false;
                 });
                 Scaffold.of(ctx).removeCurrentSnackBar();
-                Scaffold.of(ctx)
-                    .showSnackBar(SnackBar(content: Text("از درس ها حذف شد")));
+                Scaffold.of(ctx).showSnackBar(SnackBar(
+                  content: Row(
+                    textDirection: TextDirection.rtl,
+                    children: <Widget>[
+                      Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Text(
+                        "از درس هایتان حذف شد",
+                        textDirection: TextDirection.rtl,
+                      ),
+                    ],
+                  ),
+                  duration: Duration(seconds: 1),
+                ));
               },
       );
     }
 
-    if (_currentPage == 3) {
+    if (_currentPage == 3 || !isEnrolled) {
       return Container();
     }
     return FloatingActionButton(
@@ -122,6 +156,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       teacher: course.teacher,
                       time: course.time,
                       group: course.group,
+                      examTime: course.examTime,
                     ),
                     if (isEnrolled)
                       ChangeNotifierProvider<Course>.value(
@@ -144,37 +179,36 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: isEnrolled
-          ? BottomNavigationBar(
-              elevation: 0,
-              unselectedItemColor: Colors.white,
-              selectedItemColor: Theme.of(context).accentColor,
-              currentIndex: _currentPage,
-              onTap: (page) {
-                _pageController.animateToPage(page,
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.ease);
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  title: Text("توضیحات"),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.assignment_ind),
-                  title: Text("امتحانات"),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(FontAwesomeIcons.stickyNote),
-                  title: Text("یادداشت ها"),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people),
-                  title: Text('دانشجویان'),
-                ),
-              ],
-            )
-          : null,
+      bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Theme.of(context).accentColor,
+        currentIndex: _currentPage,
+        onTap: (page) {
+          _pageController.animateToPage(page,
+              duration: const Duration(milliseconds: 300), curve: Curves.ease);
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text("توضیحات"),
+          ),
+          if (isEnrolled)
+            BottomNavigationBarItem(
+              icon: Icon(Icons.assignment_ind),
+              title: Text("امتحانات"),
+            ),
+          if (isEnrolled)
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.stickyNote),
+              title: Text("یادداشت ها"),
+            ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            title: Text('دانشجویان'),
+          ),
+        ],
+      ),
       floatingActionButton: Consumer<Auth>(
         builder: (_, auth, child) => Builder(
             builder: (BuildContext ctx) =>

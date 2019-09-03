@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sess_app/providers/course.dart';
+import 'package:sess_app/utils/normalize_persian_word.dart';
 import 'package:sess_app/widgets/search_input.dart' as MySearchInput;
 
 class CourseSearch extends MySearchInput.SearchDelegate<Course> {
@@ -48,7 +49,8 @@ class CourseSearch extends MySearchInput.SearchDelegate<Course> {
     final List<Course> suggestItem = query.isEmpty
         ? []
         : courses.where((course) {
-            return course.title.contains(query);
+            return normalizePersianWord(course.title)
+                .contains(normalizePersianWord(query));
           }).toList();
     return ListView.builder(
         itemCount: suggestItem.length,

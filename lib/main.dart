@@ -68,7 +68,7 @@ class HomePage extends StatelessWidget {
             )
           : (Consumer2<Auth, DepartmentsProvider>(
               builder: (_, auth, deps, __) => auth.isAuth
-                  ? DepartmentScreen()
+                  ? ProfileScreen()
                   : FutureBuilder(
                       future: auth.autoLogin(deps),
                       builder: (_, snapshot) => snapshot.connectionState ==
