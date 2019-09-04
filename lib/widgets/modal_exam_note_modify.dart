@@ -306,7 +306,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                         _buildDateInput(
                             'نمره',
                                 (String value) {
-                              if (double.parse(value) == null || double.parse(value) < 0) {
+                              if (double.tryParse(value) == null || double.tryParse(value) < 0) {
                                 return 'نامعتبر';
                               }
                               return null;
