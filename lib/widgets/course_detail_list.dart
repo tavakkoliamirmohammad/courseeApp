@@ -54,6 +54,11 @@ class CourseDetailList extends StatelessWidget {
           subtitle: sexulaity,
           icon: FontAwesomeIcons.venusMars,
         ),
+        CourseDetailItem(
+          title: "واحد",
+          icon: Icons.format_list_numbered_rtl,
+          subtitle: "3",
+        )
       ],
     );
   }

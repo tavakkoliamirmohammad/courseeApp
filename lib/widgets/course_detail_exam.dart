@@ -5,13 +5,14 @@ import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/widgets/modal_exam_note_modify.dart';
 import 'package:persian_date/persian_date.dart';
+import 'package:sess_app/widgets/empty_item_notifier.dart';
 
 class CourseDetailExam extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final course = Provider.of<Course>(context);
 
-    return course.exams.length == 0 ? Center(child: Text('!امتحانی یافت نشد'),) : ListView.builder(
+    return course.exams.length == 0 ? EmptyItemNotifier(message: 'امتحانی یافت نشد!') : ListView.builder(
       itemBuilder: (_, i) => Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(

@@ -4,6 +4,7 @@ import 'package:persian_date/persian_date.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/course.dart';
+import 'package:sess_app/widgets/empty_item_notifier.dart';
 import 'package:sess_app/widgets/modal_exam_note_modify.dart';
 
 class CourseDetailNote extends StatelessWidget {
@@ -12,7 +13,7 @@ class CourseDetailNote extends StatelessWidget {
   Widget build(BuildContext context) {
     final course = Provider.of<Course>(context);
     print("The length of course note is " + course.notes.length.toString());
-    return course.notes.length == 0 ? Center(child: Text('!یادداشتی یافت نشد'),) : ListView.builder(
+    return course.notes.length == 0 ? EmptyItemNotifier(message: 'یادداشتی یافت نشد!',) : ListView.builder(
       itemBuilder: (_, i) => Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(

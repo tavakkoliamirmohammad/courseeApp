@@ -12,36 +12,45 @@ class ProfileScreenMain extends StatelessWidget {
     final auth = Provider.of<Auth>(context, listen: false);
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          Stack(
-            alignment: Alignment.bottomCenter,
-            overflow: Overflow.visible,
-            children: <Widget>[
-              Container(
-                  width: double.infinity,
-                  height: 200,
-                  child: Image.asset(
-                    'assets/images/shiraz-uni.jpg',
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center,
-                  )),
-              Positioned(
-                  bottom: -30,
-                  child: CircleAvatar(
-                      radius: 60,
-                      backgroundImage:
-                          (auth.image == null || auth.image.isEmpty)
-                              ? AssetImage(
-                                  'assets/images/avatar.png',
-                                )
-                              : MemoryImage(
-                                  base64.decode(auth.image),
-                                ))),
-            ],
+          Flexible(
+            flex: 2,
+            fit: FlexFit.tight,
+            child: Container(
+              margin: EdgeInsets.only(bottom: 35),
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                overflow: Overflow.visible,
+                children: <Widget>[
+                  Container(
+                      width: double.infinity,
+                      height: 200,
+                      child: Image.asset(
+                        'assets/images/shiraz-uni.jpg',
+                        fit: BoxFit.cover,
+                        alignment: Alignment.center,
+                      )),
+                  Positioned(
+                      bottom: -30,
+                      child: CircleAvatar(
+                          radius: 60,
+                          backgroundImage:
+                              (auth.image == null || auth.image.isEmpty)
+                                  ? AssetImage(
+                                      'assets/images/avatar.png',
+                                    )
+                                  : MemoryImage(
+                                      base64.decode(auth.image),
+                                    ))),
+                ],
+              ),
+            ),
           ),
-          Container(
-            height: 400,
+          Flexible(
+            flex: 4,
+            fit: FlexFit.tight,
             child: ListView.builder(
               shrinkWrap: true,
               itemBuilder: (context, index) => Column(

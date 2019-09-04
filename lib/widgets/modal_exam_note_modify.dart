@@ -104,7 +104,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
           .add(Duration(
               hours: int.parse(info['hour']),
               minutes: int.parse(info['minute'])));
-      widget.afterSave(info['description'], date, double.parse(info['grade']), auth.token);
+      widget.afterSave(info['description'], date, (double.tryParse(info['grade']) == null || info['grade'].isEmpty) ? 0.0 : double.parse(info['grade']), auth.token);
     } else if (widget.type == Type.AddNote || widget.type == Type.EditNote) {
       widget.afterSave(info['description'], auth.token);
     }
@@ -306,7 +306,10 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                         _buildDateInput(
                             'نمره',
                                 (String value) {
-                              if (double.tryParse(value) == null || double.tryParse(value) < 0) {
+                              if (value == null || value.isEmpty) {
+                                return null;
+                              }
+                              else if (double.tryParse(value) == null || double.tryParse(value) < 0) {
                                 return 'نامعتبر';
                               }
                               return null;

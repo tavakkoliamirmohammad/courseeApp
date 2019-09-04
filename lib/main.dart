@@ -11,9 +11,6 @@ import 'package:sess_app/screens/profile_screen.dart';
 import 'package:sess_app/widgets/server_connection_error.dart';
 
 void main() {
-  SystemChrome.setEnabledSystemUIOverlays(
-    [],
-  );
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
     runApp(MyApp());
