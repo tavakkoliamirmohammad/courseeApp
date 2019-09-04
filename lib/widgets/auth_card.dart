@@ -1,18 +1,19 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/departments_provider.dart';
 import 'package:sess_app/widgets/errorDialog.dart';
-
+//
 enum UserState {
   Login,
   Signup,
 }
 
 class AuthCard extends StatefulWidget {
+  final DepartmentsProvider departments;
+  AuthCard({this.departments});
   @override
   _AuthCardState createState() => _AuthCardState();
 }
@@ -26,13 +27,8 @@ class _AuthCardState extends State<AuthCard> {
 
   double mainHeight;
   var isinit = false;
+//  var connectivity;
 
-
-  @override
-  void initState() {
-    print("init state called");
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -168,7 +164,11 @@ class _AuthCardState extends State<AuthCard> {
       return;
     }
     if (userState == UserState.Signup &&
-        (info['phone'].isEmpty || info['dep'] == null)) {
+        info['phone'].isEmpty) {
+      _showMessageDialog('لطفا شماره ی همراه خود را وارد نمایید');
+      return;
+    } else if (userState == UserState.Signup && info['dep'] == null) {
+      _showMessageDialog('لطفا بخش خود را انتخاب نمایید');
       return;
     }
 
@@ -183,15 +183,28 @@ class _AuthCardState extends State<AuthCard> {
       final code = await _showCheckVerificationDialog();
       print(code);
       if (userState == UserState.Signup) {
-        await departments.signup(
-            info['phone'], code, info['name'], info['dep'].id.toString());
+//        await departments.signup(
+//            info['phone'], code, info['name'], info['dep'].id.toString());
+//        try {
+//          final result = await InternetAddress.lookup('google.com');
+//          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+//            await departments.signup(
+//                info['phone'], code, info['name'], info['dep'].id.toString());
+//            print('connected');
+//          }
+//        } on SocketException catch (_) {
+//          print('not connected');
+//        }
       } else {
-        await departments.login(info['phone'], code);
+        await departments.login(info['phone'], code, widget.departments);
       }
     }
     on HttpException catch (e){
       _showMessageDialog(e.message);
+    } catch(error) {
+      _showMessageDialog('خطا در برقراری ارتباط با سرور');
     }
+
     setState(() {
       isLoading = false;
     });

@@ -45,6 +45,29 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     _pageController.dispose();
   }
 
+  void _showErrorSnackBar(BuildContext ctx, String message) {
+    Scaffold.of(ctx).removeCurrentSnackBar();
+    Scaffold.of(ctx).showSnackBar(SnackBar(
+      content: Row(
+        textDirection: TextDirection.rtl,
+        children: <Widget>[
+          Icon(
+            FontAwesomeIcons.exclamationTriangle,
+            color: Colors.red,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            message,
+            textDirection: TextDirection.rtl,
+          ),
+        ],
+      ),
+      duration: Duration(seconds: 1),
+    ));
+  }
+
   Widget _buildFloatingActionBarButton(BuildContext ctx, Auth auth) {
     if (_currentPage == 0) {
       return FloatingActionButton(
@@ -52,57 +75,64 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             ? FontAwesomeIcons.userPlus
             : FontAwesomeIcons.userMinus),
         onPressed: !isEnrolled
-            ? () {
-                auth.enrollCourse(course);
-                setState(() {
-                  isEnrolled = true;
-                });
-                Scaffold.of(ctx).removeCurrentSnackBar();
-                Scaffold.of(ctx).showSnackBar(SnackBar(
-                  content: Row(
-                    textDirection: TextDirection.rtl,
-                    children: <Widget>[
-                      Icon(
-                        Icons.add,
-                        color: Colors.green,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "به درس های شما اضافه شد",
-                        textDirection: TextDirection.rtl,
-                      ),
-                    ],
-                  ),
-                  duration: Duration(seconds: 1),
-                ));
+            ? () async {
+                try {
+                  await auth.enrollCourse(course);
+                  setState(() {
+                    isEnrolled = true;
+                  });
+                  Scaffold.of(ctx).removeCurrentSnackBar();
+                  Scaffold.of(ctx).showSnackBar(SnackBar(
+                    content: Row(
+                      textDirection: TextDirection.rtl,
+                      children: <Widget>[
+                        Icon(
+                          Icons.add,
+                          color: Colors.green,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "به درس های شما اضافه شد",
+                          textDirection: TextDirection.rtl,
+                        ),
+                      ],
+                    ),
+                    duration: Duration(seconds: 1),
+                  ));
+                } catch (e) {
+                  _showErrorSnackBar(ctx, "خطا در برقراری ارتباط با سرور");
+                }
               }
-            : () {
-                auth.unrollCourse(course);
-                setState(() {
-                  isEnrolled = false;
-                });
-                Scaffold.of(ctx).removeCurrentSnackBar();
-                Scaffold.of(ctx).showSnackBar(SnackBar(
-                  content: Row(
-                    textDirection: TextDirection.rtl,
-                    children: <Widget>[
-                      Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Text(
-                        "از درس هایتان حذف شد",
-                        textDirection: TextDirection.rtl,
-                      ),
-                    ],
-                  ),
-                  duration: Duration(seconds: 1),
-                ));
+            : () async {
+                try {
+                  await auth.unrollCourse(course);
+                  setState(() {
+                    isEnrolled = false;
+                  });
+                  Scaffold.of(ctx).removeCurrentSnackBar();
+                  Scaffold.of(ctx).showSnackBar(SnackBar(
+                    content: Row(
+                      textDirection: TextDirection.rtl,
+                      children: <Widget>[
+                        Icon(
+                          Icons.remove,
+                          color: Colors.red,
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "از درس هایتان حذف شد",
+                          textDirection: TextDirection.rtl,
+                        ),
+                      ],
+                    ),
+                    duration: Duration(seconds: 1),
+                  ));
+                } catch (e) {
+                  _showErrorSnackBar(ctx, "خطا در برقراری ارتباط با سرور");                }
               },
       );
     }
@@ -116,8 +146,10 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             context: context,
             builder: (_) => ModalModifyExamNote(
                   afterSave: _currentPage == 1
-                      ? (String note, DateTime dateTime, double grade, String token) =>
-                          course.addExam(course.id, note, dateTime, grade, token)
+                      ? (String note, DateTime dateTime, double grade,
+                              String token) =>
+                          course.addExam(
+                              course.id, note, dateTime, grade, token)
                       : (String note, String token) =>
                           course.addNote(course.id, note, token),
                   type: _currentPage == 1 ? Type.AddExam : Type.AddNote,

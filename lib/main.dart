@@ -8,6 +8,7 @@ import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/screens/course_list.dart';
 import 'package:sess_app/screens/department_screen.dart';
 import 'package:sess_app/screens/profile_screen.dart';
+import 'package:sess_app/widgets/server_connection_error.dart';
 
 void main() {
   SystemChrome.setEnabledSystemUIOverlays(
@@ -55,7 +56,26 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  Future<void> _fetchAndSetDepartments;
+  bool init = false;
+
+  @override
+  void didChangeDependencies() {
+    if (!init) {
+      _fetchAndSetDepartments =
+          Provider.of<DepartmentsProvider>(context, listen: false)
+              .fetchAndSetDepartments();
+    }
+//    init = true;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -66,17 +86,31 @@ class HomePage extends StatelessWidget {
           ? Scaffold(
               body: Center(child: CircularProgressIndicator()),
             )
-          : (Consumer2<Auth, DepartmentsProvider>(
-              builder: (_, auth, deps, __) => auth.isAuth
-                  ? ProfileScreen()
-                  : FutureBuilder(
-                      future: auth.autoLogin(deps),
-                      builder: (_, snapshot) => snapshot.connectionState ==
-                              ConnectionState.waiting
-                          ? Scaffold(
-                              body: Center(child: CircularProgressIndicator()),
-                            )
-                          : AuthScreen()))),
+          : snapshot.hasError
+              ? ServerConnectionError(
+                  message: "خط در برقراری ارتباط با سرور",
+                  onPressed: () async {
+                    setState(() {
+                      _fetchAndSetDepartments =
+                          Provider.of<DepartmentsProvider>(context,
+                                  listen: false)
+                              .fetchAndSetDepartments();
+                    });
+                  })
+              : (Consumer2<Auth, DepartmentsProvider>(
+                  builder: (_, auth, deps, __) => auth.isAuth
+                      ? ProfileScreen()
+                      : FutureBuilder(
+                          future: auth.autoLogin(deps),
+                          builder: (_, snapshot) => snapshot.connectionState ==
+                                  ConnectionState.waiting
+                              ? Scaffold(
+                                  body: Center(
+                                      child: CircularProgressIndicator()),
+                                )
+                              : AuthScreen(
+                                  departments: deps,
+                                )))),
     );
   }
 }

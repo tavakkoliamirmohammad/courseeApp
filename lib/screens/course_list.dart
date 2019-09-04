@@ -6,6 +6,7 @@ import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/serachDelagate/course_search.dart';
 import 'package:sess_app/widgets/course_list_item.dart';
 import 'package:sess_app/widgets/search_input.dart' as MySearchInput;
+import 'package:sess_app/widgets/server_connection_error.dart';
 
 class CourseList extends StatefulWidget {
   static final routeName = "/course-list-screen";
@@ -22,13 +23,12 @@ class _CourseListState extends State<CourseList> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    if(!isInit){
+    if (!isInit) {
       department = ModalRoute.of(context).settings.arguments as Department;
       auth = Provider.of<Auth>(context, listen: false);
       _fetchAndSetUserCourse = department.fetchAndSetCourses(auth.token);
@@ -41,13 +41,21 @@ class _CourseListState extends State<CourseList> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: _fetchAndSetUserCourse,
-      builder: (_, snapshot) =>
-          snapshot.connectionState == ConnectionState.waiting
-              ? Scaffold(
-                  body: Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )
+      builder: (_, snapshot) => snapshot.connectionState ==
+              ConnectionState.waiting
+          ? Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : snapshot.hasError
+              ? ServerConnectionError(
+                  message: "خط در برقراری ارتباط با سرور",
+                  onPressed: () {
+                    setState(() {
+                      _fetchAndSetUserCourse = department.fetchAndSetCourses(auth.token);
+                    });
+                  })
               : Scaffold(
                   resizeToAvoidBottomPadding: false,
                   appBar: AppBar(

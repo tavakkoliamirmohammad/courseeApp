@@ -11,7 +11,7 @@ class CourseDetailExam extends StatelessWidget {
   Widget build(BuildContext context) {
     final course = Provider.of<Course>(context);
 
-    return ListView.builder(
+    return course.exams.length == 0 ? Center(child: Text('!امتحانی یافت نشد'),) : ListView.builder(
       itemBuilder: (_, i) => Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(

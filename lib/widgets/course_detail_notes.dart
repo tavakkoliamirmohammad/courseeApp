@@ -12,7 +12,7 @@ class CourseDetailNote extends StatelessWidget {
   Widget build(BuildContext context) {
     final course = Provider.of<Course>(context);
     print("The length of course note is " + course.notes.length.toString());
-    return ListView.builder(
+    return course.notes.length == 0 ? Center(child: Text('!یادداشتی یافت نشد'),) : ListView.builder(
       itemBuilder: (_, i) => Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(

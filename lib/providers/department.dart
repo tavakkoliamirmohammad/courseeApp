@@ -50,75 +50,72 @@ class Department with ChangeNotifier {
   }
 
   Future<void> fetchAndSetCourses(String token) async {
-    try {
-      var response = await http
-          .get("http://Sessapp.moarefe98.ir/departmentcourse/$id", headers: {
-        "Accept": "application/json",
-        'Content-Type': 'application/json',
-        "Authorization": "Token " + token.toString(),
-      });
+    var response = await http
+        .get("http://Sessapp.moarefe98.ir/departmentcourse/$id", headers: {
+      "Accept": "application/json",
+      'Content-Type': 'application/json',
+      "Authorization": "Token " + token.toString(),
+    });
 
-      var extractedDate = List<Map<String, dynamic>>.from(
-          jsonDecode(utf8.decode(response.bodyBytes)));
+    var extractedDate = List<Map<String, dynamic>>.from(
+        jsonDecode(utf8.decode(response.bodyBytes)));
 
-      var enrollRes = await http
-          .get("http://sessapp.moarefe98.ir/usercourse/__all__", headers: {
-        "Accept": "application/json",
-        'Content-Type': 'application/json',
-        "Authorization": "Token " + token.toString(),
-      });
+    var enrollRes = await http
+        .get("http://sessapp.moarefe98.ir/usercourse/__all__", headers: {
+      "Accept": "application/json",
+      'Content-Type': 'application/json',
+      "Authorization": "Token " + token.toString(),
+    });
 
-      var enrolledCourses = List<Map<String, dynamic>>.from(
-          jsonDecode(utf8.decode(enrollRes.bodyBytes)));
+    var enrolledCourses = List<Map<String, dynamic>>.from(
+        jsonDecode(utf8.decode(enrollRes.bodyBytes)));
 
-      courses = CourseListProvider();
-      extractedDate.forEach((course) {
-        bool isEnrolled = false;
-        int index = -1;
-        var mapTimePlace = _formatTimePlace(course['time_room']);
-        for (var i = 0; i < enrolledCourses.length; ++i) {
-          if (enrolledCourses[i]['course']['pk'] == course['pk']) {
-            index = i;
-            isEnrolled = true;
-            break;
-          }
+    courses = CourseListProvider();
+    extractedDate.forEach((course) {
+      bool isEnrolled = false;
+      int index = -1;
+      var mapTimePlace = _formatTimePlace(course['time_room']);
+      for (var i = 0; i < enrolledCourses.length; ++i) {
+        if (enrolledCourses[i]['course']['pk'] == course['pk']) {
+          index = i;
+          isEnrolled = true;
+          break;
         }
-        List<CourseNote> notes = [];
-        List<Exam> exams = [];
+      }
+      List<CourseNote> notes = [];
+      List<Exam> exams = [];
 
-        if (index != -1) {
-          List<Map<String, dynamic>> exNotes =
-              List<Map<String, dynamic>>.from(enrolledCourses[index]['notes']);
-          List<Map<String, dynamic>> exExams = List<Map<String, dynamic>>.from(
-              enrolledCourses[index]['exam_dates']);
-          notes = exNotes
-              .map((note) => CourseNote(
-                  note: note['text'],
-                  dateTime: DateTime.parse(note['date']),
-                  id: note['pk']))
-              .toList();
-          exams = exExams
-              .map((exam) => Exam(
-                    description: exam['title'],
-                    examTime: DateTime.parse(exam['date']),
-                    id: exam['id'],
-                  ))
-              .toList();
-        }
-        courses.addCourse(
-            course['pk'],
-            course['title'],
-            _formatTeachersName(course['teacher']),
-            mapTimePlace['place'],
-            mapTimePlace['time'],
-            course['gender'],
-            isEnrolled,
-            exams,
-            notes,
-            int.parse(course['group']), course['final_time']);
-      });
-    } catch (e) {
-      print(e.toString());
-    }
+      if (index != -1) {
+        List<Map<String, dynamic>> exNotes =
+            List<Map<String, dynamic>>.from(enrolledCourses[index]['notes']);
+        List<Map<String, dynamic>> exExams = List<Map<String, dynamic>>.from(
+            enrolledCourses[index]['exam_dates']);
+        notes = exNotes
+            .map((note) => CourseNote(
+                note: note['text'],
+                dateTime: DateTime.parse(note['date']),
+                id: note['pk']))
+            .toList();
+        exams = exExams
+            .map((exam) => Exam(
+                  description: exam['title'],
+                  examTime: DateTime.parse(exam['date']),
+                  id: exam['id'],
+                ))
+            .toList();
+      }
+      courses.addCourse(
+          course['pk'],
+          course['title'],
+          _formatTeachersName(course['teacher']),
+          mapTimePlace['place'],
+          mapTimePlace['time'],
+          course['gender'],
+          isEnrolled,
+          exams,
+          notes,
+          int.parse(course['group']),
+          course['final_time']);
+    });
   }
 }

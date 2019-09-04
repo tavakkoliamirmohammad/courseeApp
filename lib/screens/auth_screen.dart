@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sess_app/widgets/auth_card.dart';
 
 class AuthScreen extends StatelessWidget {
+  final departments;
+  AuthScreen({this.departments});
   static final routeName = "/auth-screen";
 
   @override
@@ -23,7 +25,7 @@ class AuthScreen extends StatelessWidget {
                         Container(
                           child: Text("The logo"),
                         ),
-                        AuthCard()
+                        AuthCard(departments: departments,)
                       ],
                     ),
                   ),

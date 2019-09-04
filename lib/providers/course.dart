@@ -110,7 +110,7 @@ class Course with ChangeNotifier {
             body: json.encode({
               "title": description,
               "date": time.toIso8601String(),
-              "grade": "0",
+              "grade": grade.toString(),
             }),
             headers: {
           "Accept": "application/json",
@@ -132,7 +132,7 @@ class Course with ChangeNotifier {
         body: json.encode({
           "title": description,
           "date": time.toIso8601String(),
-          "grade": grade,
+          "grade": grade.toString(),
         }),
         headers: {
           "Accept": "application/json",

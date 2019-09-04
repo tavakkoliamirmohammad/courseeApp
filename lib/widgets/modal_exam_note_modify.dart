@@ -92,12 +92,12 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
       return;
     }
 
-    info['year'] =
-        (int.parse(info['year']) <= 99 && int.parse(info['year']) >= 0)
-            ? (int.parse(info['year']) + 1300).toString()
-            : info['year'];
     final auth = Provider.of<Auth>(context, listen: false);
     if (widget.type == Type.AddExam || widget.type == Type.EditExam) {
+      info['year'] =
+      (int.parse(info['year']) <= 99 && int.parse(info['year']) >= 0)
+          ? (int.parse(info['year']) + 1300).toString()
+          : info['year'];
       final date = Jalali(int.parse(info['year']), int.parse(info['month']),
               int.parse(info['day']))
           .toDateTime()
@@ -181,7 +181,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                   : Container(),
               (widget.type == Type.AddExam || widget.type == Type.EditExam)
                   ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
                           "تاریخ",
@@ -291,32 +291,34 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 }),
                           ],
                         ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          'نمره',
+                          style: TextStyle(fontSize: 20),
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: 15,
+                        ),
+                        _buildDateInput(
+                            'نمره',
+                                (String value) {
+                              if (double.parse(value) == null || double.parse(value) < 0) {
+                                return 'نامعتبر';
+                              }
+                              return null;
+                            },
+                            info['grade'],
+                                (value) {
+                              info['grade'] = value;
+                            }
+                        ),
                       ],
                     )
                   : Container(),
-              SizedBox(
-                height: 15,
-              ),
-              Text(
-                'نمره',
-                textDirection: TextDirection.rtl,
-              ),
-              SizedBox(
-                height: 15,
-              ),
-              _buildDateInput(
-                'نمره',
-                (String value) {
-                  if (double.parse(value) == null || double.parse(value) < 0) {
-                    return 'نامعتبر';
-                  }
-                  return null;
-                },
-                info['grade'],
-                (value) {
-                  info['grade'] = value;
-                }
-              ),
               SizedBox(
                 height: 20,
               ),
