@@ -28,13 +28,16 @@ class CourseListItem extends StatelessWidget {
             Navigator.of(context)
                 .pushNamed(CourseDetailScreen.routeName, arguments: course);
           },
-          title: Text(
-            course.title,
-            textDirection: TextDirection.rtl,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 18),
-            overflow: TextOverflow.fade,
-            softWrap: true,
+          title: Hero(
+            tag: course.id,
+            child: Text(
+              course.title,
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 18),
+              overflow: TextOverflow.fade,
+              softWrap: true,
+            ),
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 8.0),

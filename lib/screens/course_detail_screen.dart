@@ -145,6 +145,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         showModalBottomSheet(
             context: context,
             builder: (_) => ModalModifyExamNote(
+              listKey: _listKey,
                   afterSave: _currentPage == 1
                       ? (String note, DateTime dateTime, double grade,
                               String token) =>
@@ -159,7 +160,8 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
       child: Icon(Icons.add),
     );
   }
-
+  GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  function(val) => _listKey = val;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,7 +169,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         child: Column(
           children: <Widget>[
             AppBar(
-              title: Text(course.title),
+              title: Hero(child: Text(course.title), tag: course.id,),
               centerTitle: true,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -192,12 +194,12 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                     ),
                     if (isEnrolled)
                       ChangeNotifierProvider<Course>.value(
-                        child: CourseDetailExam(),
+                        child: CourseDetailExam(listKeyHandler: function,),
                         value: course,
                       ),
                     if (isEnrolled)
                       ChangeNotifierProvider<Course>.value(
-                        child: CourseDetailNote(),
+                        child: CourseDetailNote(func: function,),
                         value: course,
                       ),
                     ChangeNotifierProvider<Course>.value(

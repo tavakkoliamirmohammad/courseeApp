@@ -34,16 +34,55 @@ class ProfileScreenMain extends StatelessWidget {
                       )),
                   Positioned(
                       bottom: -30,
-                      child: CircleAvatar(
-                          radius: 60,
-                          backgroundImage:
-                              (auth.image == null || auth.image.isEmpty)
+                      child: InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => Dismissible(
+                              key: Key('profile'),
+                              direction: DismissDirection.up,
+                              onDismissed: (dir) {
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                child: Image.memory(
+                                  base64.decode(auth.image),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            )
+                          );
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(
+                            'assets/images/avatar.png',
+                          ),
+                          child: ClipOval(
+                            child: FadeInImage(
+                              placeholder: AssetImage(
+                                'assets/images/avatar.png',
+                              ),
+                              image: (auth.image == null || auth.image.isEmpty)
                                   ? AssetImage(
-                                      'assets/images/avatar.png',
-                                    )
+                                'assets/images/avatar.png',
+                              )
                                   : MemoryImage(
-                                      base64.decode(auth.image),
-                                    ))),
+                                base64.decode(auth.image),
+                              ),
+                            ),
+                          ),
+                            radius: 60,
+                        ),
+                      )
+                  )
+//                          backgroundImage:
+//                              (auth.image == null || auth.image.isEmpty)
+//                                  ? AssetImage(
+//                                      'assets/images/avatar.png',
+//                                    )
+//                                  : MemoryImage(
+//                                      base64.decode(auth.image),
+//                                    ))),
                 ],
               ),
             ),

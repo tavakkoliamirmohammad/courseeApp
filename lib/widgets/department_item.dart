@@ -26,13 +26,16 @@ class DepartmentItem extends StatelessWidget {
             Navigator.of(context)
                 .pushNamed(CourseList.routeName, arguments: department);
           },
-          title: Text(
-            department.name,
-            textDirection: TextDirection.rtl,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 20),
-            overflow: TextOverflow.fade,
-            softWrap: true,
+          title: Hero(
+            tag: department.id,
+            child: Text(
+              department.name,
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white, fontSize: 20),
+              overflow: TextOverflow.fade,
+              softWrap: true,
+            ),
           ),
         ),
       ),

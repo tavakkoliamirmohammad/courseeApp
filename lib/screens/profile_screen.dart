@@ -152,11 +152,14 @@ Widget build(BuildContext context) {
     body: FutureBuilder(
       future: Provider.of<Auth>(context, listen: false).fetchUserDetails(),
       builder: (context, snapshot) =>
-      snapshot.connectionState == ConnectionState.waiting
-          ? Center(
-        child: CircularProgressIndicator(),
-      )
-          : ProfileScreenMain(),
+      RefreshIndicator(
+        onRefresh: Provider.of<Auth>(context, listen: false).fetchUserDetails,
+        child: snapshot.connectionState == ConnectionState.waiting
+            ? Center(
+          child: CircularProgressIndicator(),
+        )
+            : ProfileScreenMain(),
+      ),
     ),
   );
 }}

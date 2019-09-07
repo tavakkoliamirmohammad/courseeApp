@@ -7,12 +7,13 @@ import 'package:shamsi_date/shamsi_date.dart';
 enum Type { AddNote, AddExam, EditNote, EditExam }
 
 class ModalModifyExamNote extends StatefulWidget {
+  final GlobalKey<AnimatedListState> listKey;
   final Function afterSave;
   final Type type;
   Map<String, String> initialInfo = {};
 
   ModalModifyExamNote(
-      {@required this.afterSave, @required this.type, this.initialInfo});
+      {this.listKey, @required this.afterSave, @required this.type, this.initialInfo});
 
   @override
   _ModalModifyExamNoteState createState() => _ModalModifyExamNoteState();
@@ -105,8 +106,14 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
               hours: int.parse(info['hour']),
               minutes: int.parse(info['minute'])));
       widget.afterSave(info['description'], date, (double.tryParse(info['grade']) == null || info['grade'].isEmpty) ? 0.0 : double.parse(info['grade']), auth.token);
+      if (widget.type == Type.AddExam) {
+        widget.listKey.currentState.insertItem(0);
+      }
     } else if (widget.type == Type.AddNote || widget.type == Type.EditNote) {
       widget.afterSave(info['description'], auth.token);
+      if (widget.type == Type.AddNote) {
+        widget.listKey.currentState.insertItem(0);
+      }
     }
 
     Navigator.of(context).pop(true);

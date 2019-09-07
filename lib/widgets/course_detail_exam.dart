@@ -6,14 +6,49 @@ import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/widgets/modal_exam_note_modify.dart';
 import 'package:persian_date/persian_date.dart';
 import 'package:sess_app/widgets/empty_item_notifier.dart';
+import 'package:sess_app/models/exam.dart';
 
-class CourseDetailExam extends StatelessWidget {
+class CourseDetailExam extends StatefulWidget {
+  final Function listKeyHandler;
+  CourseDetailExam({this.listKeyHandler});
+  @override
+  _CourseDetailExamState createState() => _CourseDetailExamState();
+}
+
+class _CourseDetailExamState extends State<CourseDetailExam> {
+  GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  Widget _buildItem(Exam item, Animation animation) {
+    return SizeTransition(
+        sizeFactor: animation,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.red, Colors.deepOrange],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
+          child: ListTile(
+            key: ValueKey(item.id),
+            title: Text(
+              item.description,
+              textDirection: TextDirection.rtl,
+            ),
+            subtitle: Text(PersianDate().gregorianToJalali(
+                item.examTime.toString(), "yyyy/mm/dd  HH:nn")),
+          ),
+
+        )
+    );
+  }
+  Function updateListKey(keyValue) => _listKey = keyValue;
   @override
   Widget build(BuildContext context) {
+    widget.listKeyHandler(_listKey);
     final course = Provider.of<Course>(context);
-
-    return course.exams.length == 0 ? EmptyItemNotifier(message: 'امتحانی یافت نشد!') : ListView.builder(
-      itemBuilder: (_, i) => Container(
+    return course.exams.length == 0 ? EmptyItemNotifier(message: 'امتحانی یافت نشد!') : AnimatedList(
+      key: _listKey,
+      itemBuilder: (_, i, animation) => Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -69,8 +104,16 @@ class CourseDetailExam extends StatelessWidget {
                   ),
                 ).then((value) {
                   if (value == true) {
-                    course.deleteExam(
-                        course.exams[i].id, Provider.of<Auth>(context).token);
+                    int index = course.exams.indexWhere((exam) => exam.id == course.exams[i].id);
+                    AnimatedListRemovedItemBuilder builder = (context, animation) {
+                      // A method to build the Card widget.
+                      return _buildItem(course.exams[i], animation);
+                    };
+                    setState(() {
+                      _listKey.currentState.removeItem(index, builder);
+                      course.deleteExam(
+                          course.exams[i].id, Provider.of<Auth>(context).token);
+                    });
                   }
                 });
               },
@@ -112,7 +155,7 @@ class CourseDetailExam extends StatelessWidget {
           ],
         ),
       ),
-      itemCount: course.exams.length,
+      initialItemCount: course.exams.length,
     );
   }
 }

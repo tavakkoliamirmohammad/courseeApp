@@ -59,7 +59,7 @@ class Course with ChangeNotifier {
         });
     print(json.decode(res.body));
     print("add note");
-    notes.add(CourseNote(
+    notes.insert(0, CourseNote(
         id: json.decode(res.body)['pk'], note: note, dateTime: dateTime));
     print(json.decode(res.body)['pk']);
     notifyListeners();
@@ -118,7 +118,7 @@ class Course with ChangeNotifier {
           "Authorization": "Token " + token.toString(),
         });
     print(json.decode(res.body));
-    exams.add(Exam(
+    exams.insert(0, Exam(
         id: json.decode(res.body)['pk'],
         description: description,
         grade: grade,
