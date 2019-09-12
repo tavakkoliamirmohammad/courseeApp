@@ -14,6 +14,8 @@ class Course with ChangeNotifier {
   final String time;
   final int group;
   final String examTime;
+  final String unit;
+  final String faculty;
   bool isEnrolled = false;
 
   List<CourseNote> notes;
@@ -30,7 +32,9 @@ class Course with ChangeNotifier {
       @required this.notes,
       @required this.exams,
       @required this.group,
-      @required this.examTime});
+      @required this.examTime,
+      @required this.unit,
+      @required this.faculty});
 
   void enroll() {
     this.isEnrolled = true;
@@ -59,7 +63,7 @@ class Course with ChangeNotifier {
         });
     print(json.decode(res.body));
     print("add note");
-    notes.insert(0, CourseNote(
+    notes.add(CourseNote(
         id: json.decode(res.body)['pk'], note: note, dateTime: dateTime));
     print(json.decode(res.body)['pk']);
     notifyListeners();

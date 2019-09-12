@@ -23,7 +23,11 @@ class AuthScreen extends StatelessWidget {
 //                            crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: <Widget>[
                         Container(
-                          child: Text("The logo"),
+                          margin: EdgeInsets.only(top: 10),
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: AssetImage('assets/images/logo.png'),
+                          ),
                         ),
                         AuthCard(departments: departments,)
                       ],

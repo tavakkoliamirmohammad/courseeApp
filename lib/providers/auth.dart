@@ -177,6 +177,16 @@ class Auth with ChangeNotifier {
     return teachersName;
   }
 
+  String _formatFacultyName(String faculty) {
+    if (faculty == null || faculty.isEmpty) {
+      return faculty;
+    }
+    if (faculty[faculty.length - 1] == '*') {
+      faculty = faculty.substring(0, faculty.length - 1);
+    }
+    return faculty;
+  }
+
   Future<void> fetchUserDetails() async {
     print("called");
     try {
@@ -189,10 +199,10 @@ class Auth with ChangeNotifier {
       userCourseList = CourseListProvider();
       var userInfo = List<Map<String, dynamic>>.from(
           jsonDecode(utf8.decode(response.bodyBytes)));
+      print("userInfo: " + userInfo[0]['user_course'][0]['course']['unit'][12].toString());
       userInfo[0]['user_course'].forEach((courseData) {
         Map<String, String> timePlace =
             _formatTimePlace(courseData['course']['time_room']);
-
         List<CourseNote> notes = [];
         List<Exam> exams = [];
         List<Map<String, dynamic>> exNotes =
@@ -226,7 +236,9 @@ class Auth with ChangeNotifier {
             exams,
             notes,
             int.parse(courseData['course']['group']),
-            courseData['course']['final_time']);
+            courseData['course']['final_time'],
+            courseData['course'] ['vahed'],
+            _formatFacultyName(courseData['course']['unit']));
       });
 //      notifyListeners();
     } on Exception catch (e) {
@@ -270,6 +282,17 @@ class Auth with ChangeNotifier {
     return Map<String, dynamic>.from(
         json.decode(utf8.decode(response.bodyBytes))[0]);
   }
+
+  Future<Map<String, dynamic>> fetchTermsPolicy() async {
+  var response =
+  await http.get("http://Sessapp.moarefe98.ir/policy", headers: {
+    "Accept": "application/json",
+    'Content-Type': 'application/json',
+    "Authorization": "Token " + token.toString(),
+  });
+  print("Terms: " + json.decode(response.body).toString());
+  return json.decode(response.body)[0];
+}
 
   List<Course> get userCourses {
     print("courses: " + userCourseList.courses.toString());

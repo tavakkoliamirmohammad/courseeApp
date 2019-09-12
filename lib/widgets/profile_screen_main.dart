@@ -33,7 +33,7 @@ class ProfileScreenMain extends StatelessWidget {
                         alignment: Alignment.center,
                       )),
                   Positioned(
-                      bottom: -30,
+                      bottom: -50,
                       child: InkWell(
                         onTap: () {
                           showDialog(
@@ -53,25 +53,28 @@ class ProfileScreenMain extends StatelessWidget {
                             )
                           );
                         },
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(
-                            'assets/images/avatar.png',
-                          ),
-                          child: ClipOval(
-                            child: FadeInImage(
-                              placeholder: AssetImage(
-                                'assets/images/avatar.png',
-                              ),
-                              image: (auth.image == null || auth.image.isEmpty)
-                                  ? AssetImage(
-                                'assets/images/avatar.png',
-                              )
-                                  : MemoryImage(
-                                base64.decode(auth.image),
+                        child: Container(
+                          height: 120,
+                          width: 120,
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          decoration: BoxDecoration(shape: BoxShape.circle),
+                          child: FittedBox(
+                            fit: BoxFit.fill,
+                            child: ClipOval(
+                              child: FadeInImage(
+                                placeholder: AssetImage(
+                                  'assets/images/avatar.png',
+                                ),
+                                image: (auth.image == null || auth.image.isEmpty)
+                                    ? AssetImage(
+                                  'assets/images/avatar.png',
+                                )
+                                    : MemoryImage(
+                                  base64.decode(auth.image),
+                                ),
                               ),
                             ),
                           ),
-                            radius: 60,
                         ),
                       )
                   )

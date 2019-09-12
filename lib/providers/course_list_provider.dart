@@ -27,7 +27,9 @@ class CourseListProvider with ChangeNotifier {
       List<Exam> exams,
       List<CourseNote> notes,
       int group,
-      String examTime) {
+      String examTime,
+      String unit,
+      String faculty) {
     _courses.add(Course(
       id: id,
       title: title,
@@ -39,7 +41,9 @@ class CourseListProvider with ChangeNotifier {
       exams: exams,
       notes: notes,
       group: group,
-      examTime: examTime
+      examTime: examTime,
+      unit: unit,
+      faculty: faculty
     ));
     notifyListeners();
   }
