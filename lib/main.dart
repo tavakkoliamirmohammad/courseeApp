@@ -9,6 +9,7 @@ import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/screens/course_list.dart';
 import 'package:sess_app/screens/department_screen.dart';
 import 'package:sess_app/screens/profile_screen.dart';
+import 'package:sess_app/screens/report_screen.dart';
 import 'package:sess_app/screens/terms_policy_screen.dart';
 import 'package:sess_app/widgets/server_connection_error.dart';
 import 'package:sess_app/screens/about_us_screen.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
           TermsPolicyScreen.routeName: (_) => TermsPolicyScreen(),
 
           SuggestionScreen.routeName: (_) => SuggestionScreen(),
+          ReportScreen.routeName: (_) => ReportScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),

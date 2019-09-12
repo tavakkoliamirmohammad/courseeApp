@@ -295,6 +295,18 @@ class Auth with ChangeNotifier {
     return json.decode(response.body)[0];
   }
 
+  Future<Map<String, dynamic>> fetchContact() async {
+
+    var response =
+    await http.get("http://Sessapp.moarefe98.ir/contact", headers: {
+      "Accept": "application/json",
+      'Content-Type': 'application/json',
+      "Authorization": "Token " + token.toString(),
+    });
+    print("contact: " + json.decode(response.body).toString());
+    return json.decode(response.body)[0];
+  }
+
   List<Course> get userCourses {
     print("courses: " + userCourseList.courses.toString());
     return userCourseList.courses;
