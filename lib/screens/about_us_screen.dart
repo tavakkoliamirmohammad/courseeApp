@@ -111,7 +111,7 @@ class AboutUsScreen extends StatelessWidget {
             ),
             Divider(),
             ListTile(
-              onTap: () {},
+              onTap: () => launch("tel://+989379852503"),
               title: Text('تماس با ما', textDirection: TextDirection.rtl),
             ),
             Divider(),
