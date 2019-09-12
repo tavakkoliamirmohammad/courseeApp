@@ -8,7 +8,9 @@ import 'package:sess_app/screens/course_detail_screen.dart';
 import 'package:sess_app/screens/course_list.dart';
 import 'package:sess_app/screens/department_screen.dart';
 import 'package:sess_app/screens/profile_screen.dart';
+import 'package:sess_app/screens/terms_policy_screen.dart';
 import 'package:sess_app/widgets/server_connection_error.dart';
+import 'package:sess_app/screens/about_us_screen.dart';
 
 void main() {
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
@@ -46,6 +48,8 @@ class MyApp extends StatelessWidget {
           CourseDetailScreen.routeName: (_) => CourseDetailScreen(),
           CourseList.routeName: (_) => CourseList(),
           ProfileScreen.routeName: (_) => ProfileScreen(),
+          AboutUsScreen.routeName: (_) => AboutUsScreen(),
+          TermsPolicyScreen.routeName: (_) => TermsPolicyScreen(),
         },
         debugShowCheckedModeBanner: false,
       ),

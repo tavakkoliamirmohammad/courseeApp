@@ -56,6 +56,8 @@ class ProfileScreenMain extends StatelessWidget {
                         child: CircleAvatar(
                           backgroundImage: AssetImage(
                             'assets/images/avatar.png',
+
+
                           ),
                           child: ClipOval(
                             child: FadeInImage(

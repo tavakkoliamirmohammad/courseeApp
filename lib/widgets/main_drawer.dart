@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/screens/department_screen.dart';
 import 'package:sess_app/screens/profile_screen.dart';
+import 'package:sess_app/screens/about_us_screen.dart';
 
 class MainDrawer extends StatelessWidget {
   Widget _drawerItemBuilder(String title, IconData icon, Function callback) {
@@ -40,6 +41,10 @@ class MainDrawer extends StatelessWidget {
               FontAwesomeIcons.building,
               () => Navigator.of(context)
                   .pushReplacementNamed(DepartmentScreen.routeName)),
+          Divider(),
+          _drawerItemBuilder('درباره ما', Icons.info, () {
+            Navigator.of(context).pushReplacementNamed(AboutUsScreen.routeName);
+          }),
           Divider(),
           _drawerItemBuilder("خروج", Icons.exit_to_app, () {
             Navigator.of(context).pop();

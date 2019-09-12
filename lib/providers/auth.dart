@@ -271,6 +271,17 @@ class Auth with ChangeNotifier {
         json.decode(utf8.decode(response.bodyBytes))[0]);
   }
 
+  Future<Map<String, dynamic>> fetchTermsPolicy() async {
+    var response =
+    await http.get("http://Sessapp.moarefe98.ir/policy", headers: {
+      "Accept": "application/json",
+      'Content-Type': 'application/json',
+      "Authorization": "Token " + token.toString(),
+    });
+    print("Terms: " + json.decode(response.body).toString());
+    return json.decode(response.body)[0];
+  }
+
   List<Course> get userCourses {
     print("courses: " + userCourseList.courses.toString());
     return userCourseList.courses;
