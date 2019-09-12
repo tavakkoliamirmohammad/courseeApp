@@ -78,12 +78,9 @@ class _CourseListState extends State<CourseList> {
                             });
                           })
                     ],
-                    title: Hero(
-                      tag: department.id,
-                      child: Text(
-                        "دروس " + department.name,
-                        textDirection: TextDirection.rtl,
-                      ),
+                    title: Text(
+                      "دروس " + department.name,
+                      textDirection: TextDirection.rtl,
                     ),
                     centerTitle: true,
                     backgroundColor: Colors.transparent,

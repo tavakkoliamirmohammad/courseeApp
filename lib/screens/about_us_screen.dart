@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
+import 'package:sess_app/screens/suggestion_screen.dart';
 import 'package:sess_app/screens/terms_policy_screen.dart';
+import 'package:sess_app/widgets/main_drawer.dart';
 
 class AboutUsScreen extends StatelessWidget {
   static const routeName = '/about-us';
@@ -11,8 +13,12 @@ class AboutUsScreen extends StatelessWidget {
     final authData = Provider.of<Auth>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('درباره ما'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: Text('درباره ما' ),
       ),
+      drawer: MainDrawer(),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -69,7 +75,12 @@ class AboutUsScreen extends StatelessWidget {
             Divider(),
 
             ListTile(
-              onTap: () {},
+
+              onTap: () async {
+                Navigator.of(context).pushNamed(
+                  SuggestionScreen.routeName
+                );
+              },
               title: Text(
                 'ثبت انتقادات و پیشنهادات',
                 textDirection: TextDirection.rtl,
@@ -85,7 +96,6 @@ class AboutUsScreen extends StatelessWidget {
               ),
             ),
             Divider(),
-
             ListTile(
               onTap: () {},
               title: Text('تماس با ما', textDirection: TextDirection.rtl),
