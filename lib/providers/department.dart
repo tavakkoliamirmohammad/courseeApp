@@ -29,6 +29,16 @@ class Department with ChangeNotifier {
     return teachersName;
   }
 
+  String _formatFacultyName(String faculty) {
+    if (faculty == null || faculty.isEmpty) {
+      return faculty;
+    }
+    if (faculty[faculty.length - 1] == '*') {
+      faculty = faculty.substring(0, faculty.length - 1);
+    }
+    return faculty;
+  }
+
   Map<String, String> _formatTimePlace(String timePlace) {
     Map<String, String> timePlaceMap = {};
 
@@ -115,7 +125,9 @@ class Department with ChangeNotifier {
           exams,
           notes,
           int.parse(course['group']),
-          course['final_time']);
+          course['final_time'],
+          course['vahed'],
+          _formatFacultyName(course['unit']));
     });
   }
 }

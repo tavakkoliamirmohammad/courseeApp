@@ -7,13 +7,15 @@ import 'package:shamsi_date/shamsi_date.dart';
 enum Type { AddNote, AddExam, EditNote, EditExam }
 
 class ModalModifyExamNote extends StatefulWidget {
-  final GlobalKey<AnimatedListState> listKey;
   final Function afterSave;
   final Type type;
   Map<String, String> initialInfo = {};
 
   ModalModifyExamNote(
-      {this.listKey, @required this.afterSave, @required this.type, this.initialInfo});
+      {
+      @required this.afterSave,
+      @required this.type,
+      this.initialInfo});
 
   @override
   _ModalModifyExamNoteState createState() => _ModalModifyExamNoteState();
@@ -31,6 +33,13 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
     'grade': '',
   };
   var isinit = false;
+
+  final dayFocusNode = FocusNode();
+  final monthFocusNode = FocusNode();
+  final yearFocusNode = FocusNode();
+  final hourFocusNode = FocusNode();
+  final minuteFocusNode = FocusNode();
+  final gradeFocusNode = FocusNode();
 
   @override
   void didChangeDependencies() {
@@ -96,31 +105,30 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
     final auth = Provider.of<Auth>(context, listen: false);
     if (widget.type == Type.AddExam || widget.type == Type.EditExam) {
       info['year'] =
-      (int.parse(info['year']) <= 99 && int.parse(info['year']) >= 0)
-          ? (int.parse(info['year']) + 1300).toString()
-          : info['year'];
+          (int.parse(info['year']) <= 99 && int.parse(info['year']) >= 0)
+              ? (int.parse(info['year']) + 1300).toString()
+              : info['year'];
       final date = Jalali(int.parse(info['year']), int.parse(info['month']),
               int.parse(info['day']))
           .toDateTime()
           .add(Duration(
               hours: int.parse(info['hour']),
               minutes: int.parse(info['minute'])));
-      widget.afterSave(info['description'], date, (double.tryParse(info['grade']) == null || info['grade'].isEmpty) ? 0.0 : double.parse(info['grade']), auth.token);
-      if (widget.type == Type.AddExam) {
-        widget.listKey.currentState.insertItem(0);
-      }
+      widget.afterSave(
+          info['description'],
+          date,
+          (double.tryParse(info['grade']) == null || info['grade'].isEmpty)
+              ? 0.0
+              : double.parse(info['grade']),
+          auth.token);
     } else if (widget.type == Type.AddNote || widget.type == Type.EditNote) {
       widget.afterSave(info['description'], auth.token);
-      if (widget.type == Type.AddNote) {
-        widget.listKey.currentState.insertItem(0);
-      }
     }
-
     Navigator.of(context).pop(true);
   }
 
   Widget _buildDateInput(
-      String title, Function validator, String value, Function onsave) {
+      String title, Function validator, String value, Function onsave, FocusNode currFocusNode, FocusNode nextFocusNode) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8),
       width: 70,
@@ -132,6 +140,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
             keyboardType: TextInputType.number,
             validator: validator,
             onSaved: onsave,
+            textInputAction: currFocusNode != gradeFocusNode ? TextInputAction.next : TextInputAction.done,
             decoration: InputDecoration(
               labelText: title,
               border: OutlineInputBorder(
@@ -139,7 +148,14 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                   Radius.circular(10),
                 ),
               ),
-            )),
+            ),
+          focusNode: currFocusNode,
+          onFieldSubmitted: (_) {
+              currFocusNode == gradeFocusNode ? _saveForm() :
+              FocusScope.of(context).requestFocus(nextFocusNode);
+
+          },
+        ),
       ),
     );
   }
@@ -160,6 +176,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
               Directionality(
                 textDirection: TextDirection.rtl,
                 child: TextFormField(
+                  autofocus: true,
                   initialValue: info['desciption'],
                   cursorColor: Theme.of(context).accentColor,
                   keyboardType: TextInputType.multiline,
@@ -215,7 +232,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['year'],
                                 (value) {
                                   info['year'] = value;
-                                }),
+                                }, yearFocusNode, hourFocusNode),
                             _buildDateInput(
                                 "ماه",
                                 (String value) {
@@ -231,7 +248,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['month'],
                                 (value) {
                                   info['month'] = value;
-                                }),
+                                }, monthFocusNode, yearFocusNode),
                             _buildDateInput(
                                 "روز",
                                 (String value) {
@@ -247,7 +264,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['day'],
                                 (value) {
                                   info['day'] = value;
-                                }),
+                                }, null, monthFocusNode),
                           ],
                         ),
                         SizedBox(
@@ -279,7 +296,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['hour'],
                                 (value) {
                                   info['hour'] = value;
-                                }),
+                                }, hourFocusNode, minuteFocusNode),
                             _buildDateInput(
                                 "دقیقه",
                                 (String value) {
@@ -295,7 +312,7 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['minute'],
                                 (value) {
                                   info['minute'] = value;
-                                }),
+                                }, minuteFocusNode, gradeFocusNode),
                           ],
                         ),
                         SizedBox(
@@ -312,20 +329,19 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                         ),
                         _buildDateInput(
                             'نمره',
-                                (String value) {
+                            (String value) {
                               if (value == null || value.isEmpty) {
                                 return null;
-                              }
-                              else if (double.tryParse(value) == null || double.tryParse(value) < 0) {
+                              } else if (double.tryParse(value) == null ||
+                                  double.tryParse(value) < 0) {
                                 return 'نامعتبر';
                               }
                               return null;
                             },
                             info['grade'],
-                                (value) {
+                            (value) {
                               info['grade'] = value;
-                            }
-                        ),
+                            }, gradeFocusNode, null),
                       ],
                     )
                   : Container(),

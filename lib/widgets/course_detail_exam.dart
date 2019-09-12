@@ -9,14 +9,11 @@ import 'package:sess_app/widgets/empty_item_notifier.dart';
 import 'package:sess_app/models/exam.dart';
 
 class CourseDetailExam extends StatefulWidget {
-  final Function listKeyHandler;
-  CourseDetailExam({this.listKeyHandler});
   @override
   _CourseDetailExamState createState() => _CourseDetailExamState();
 }
 
 class _CourseDetailExamState extends State<CourseDetailExam> {
-  GlobalKey<AnimatedListState> _listKey = GlobalKey();
   Widget _buildItem(Exam item, Animation animation) {
     return SizeTransition(
         sizeFactor: animation,
@@ -41,14 +38,11 @@ class _CourseDetailExamState extends State<CourseDetailExam> {
         )
     );
   }
-  Function updateListKey(keyValue) => _listKey = keyValue;
   @override
   Widget build(BuildContext context) {
-    widget.listKeyHandler(_listKey);
     final course = Provider.of<Course>(context);
-    return course.exams.length == 0 ? EmptyItemNotifier(message: 'امتحانی یافت نشد!') : AnimatedList(
-      key: _listKey,
-      itemBuilder: (_, i, animation) => Container(
+    return course.exams.length == 0 ? EmptyItemNotifier(message: 'امتحانی یافت نشد!') : ListView.builder(
+      itemBuilder: (_, i) => Container(
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -104,16 +98,8 @@ class _CourseDetailExamState extends State<CourseDetailExam> {
                   ),
                 ).then((value) {
                   if (value == true) {
-                    int index = course.exams.indexWhere((exam) => exam.id == course.exams[i].id);
-                    AnimatedListRemovedItemBuilder builder = (context, animation) {
-                      // A method to build the Card widget.
-                      return _buildItem(course.exams[i], animation);
-                    };
-                    setState(() {
-                      _listKey.currentState.removeItem(index, builder);
-                      course.deleteExam(
-                          course.exams[i].id, Provider.of<Auth>(context).token);
-                    });
+                    course.deleteExam(
+                        course.exams[i].id, Provider.of<Auth>(context).token);
                   }
                 });
               },
@@ -155,7 +141,7 @@ class _CourseDetailExamState extends State<CourseDetailExam> {
           ],
         ),
       ),
-      initialItemCount: course.exams.length,
+      itemCount: course.exams.length,
     );
   }
 }

@@ -27,16 +27,27 @@ dependencies:
   jalali_calendar: ^0.1.6+2
   http: ^0.12.0+2
   intl_phone_number_input: ^0.0.10
+  international_phone_input: ^1.0.2
   shared_preferences: ^0.5.3+4
   font_awesome_flutter: ^8.5.0
   flutter_slidable: ^0.5.3
   shamsi_date: ^0.6.3
   image_picker: ^0.6.1+4
   url_launcher: ^5.1.2
+  flutter_html_view: ^0.5.11
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.7.3
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "dev_assets/Coursee_Icon_V2.png"
+  adaptive_icon_background: "dev_assets/Icon_Background_Black.png"
+  adaptive_icon_foreground: "dev_assets/Coursee_Logo_V2.png"
 
 
 # For information on the generic Dart part of this file, see the
@@ -55,6 +66,7 @@ flutter:
       - assets/images/user.png
       - assets/images/avatar.png
       - assets/images/shiraz-uni.jpg
+      - assets/images/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

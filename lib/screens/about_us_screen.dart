@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sess_app/providers/auth.dart';
+import 'package:sess_app/screens/suggestion_screen.dart';
+import 'package:sess_app/screens/terms_policy_screen.dart';
+import 'package:sess_app/widgets/main_drawer.dart';
 import 'package:sess_app/screens/terms_policy_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+
+
+
 
 class AboutUsScreen extends StatelessWidget {
   static const routeName = '/about-us';
@@ -13,8 +20,16 @@ class AboutUsScreen extends StatelessWidget {
     final authData = Provider.of<Auth>(context);
     return Scaffold(
       appBar: AppBar(
+
         title: Text('درباره ما'),
+
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        // title: Text('درباره ما' ),
       ),
+      drawer: MainDrawer(),
+
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,8 +61,12 @@ class AboutUsScreen extends StatelessWidget {
                 final result = await authData.fetchTermsPolicy();
                 Navigator.of(context).pushNamed(
                   TermsPolicyScreen.routeName,
-                  arguments: {'tos': result['tos']},
+
+                  arguments: {
+                    'tos': result['tos']
+                  },
                 );
+
               },
               title: Text('Terms of Service', textDirection: TextDirection.rtl),
             ),
@@ -57,15 +76,25 @@ class AboutUsScreen extends StatelessWidget {
                 final result = await authData.fetchTermsPolicy();
                 Navigator.of(context).pushNamed(
                   TermsPolicyScreen.routeName,
-                  arguments: {'pp': result['pp']},
+
+                  arguments: {
+                    'pp': result['pp']
+                  },
                 );
+
               },
               title: Text('Privacy Policy', textDirection: TextDirection.rtl),
             ),
             Divider(),
 
             ListTile(
-              onTap: () {},
+
+
+              onTap: () async {
+                Navigator.of(context).pushNamed(
+                  SuggestionScreen.routeName
+                );
+              },
               title: Text(
                 'ثبت انتقادات و پیشنهادات',
                 textDirection: TextDirection.rtl,
@@ -81,7 +110,6 @@ class AboutUsScreen extends StatelessWidget {
               ),
             ),
             Divider(),
-
             ListTile(
               onTap: () {},
               title: Text('تماس با ما', textDirection: TextDirection.rtl),
@@ -100,6 +128,7 @@ class AboutUsScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 IconButton(
+
                   onPressed: () {
                     _launchURL() async {
                       const url = 'https://t.me/mohamadbastin';
@@ -112,12 +141,14 @@ class AboutUsScreen extends StatelessWidget {
 
                     _launchURL();
                   },
+
                   icon: Icon(
                     FontAwesomeIcons.telegram,
                     size: 30,
                   ),
                 ),
                 IconButton(
+
                   onPressed: () {
 
                     _launchURL() async {
@@ -131,12 +162,14 @@ class AboutUsScreen extends StatelessWidget {
 
                     _launchURL();
                   },
+
                   icon: Icon(
                     FontAwesomeIcons.instagram,
                     size: 30,
                   ),
                 ),
                 IconButton(
+
                   onPressed: () {
                     _launchURL() async {
                       const url = 'https://wa.me/989379852503';
@@ -149,6 +182,7 @@ class AboutUsScreen extends StatelessWidget {
 
                     _launchURL();
                   },
+
                   icon: Icon(
                     FontAwesomeIcons.whatsapp,
                     size: 30,
@@ -167,6 +201,7 @@ class AboutUsScreen extends StatelessWidget {
 
                     _launchURL();
                   },
+
                   icon: Icon(
                     FontAwesomeIcons.apple,
                     size: 30,
@@ -179,6 +214,7 @@ class AboutUsScreen extends StatelessWidget {
       ),
     );
   }
+
 }
 
 //Future<Map<String, dynamic>> fetchTermsPolicy() async {
@@ -191,3 +227,5 @@ class AboutUsScreen extends StatelessWidget {
 //  print("Terms: " + json.decode(response.body).toString());
 //  return json.decode(response.body)[0];
 //}
+
+

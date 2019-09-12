@@ -145,7 +145,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         showModalBottomSheet(
             context: context,
             builder: (_) => ModalModifyExamNote(
-              listKey: _listKey,
                   afterSave: _currentPage == 1
                       ? (String note, DateTime dateTime, double grade,
                               String token) =>
@@ -169,7 +168,7 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
         child: Column(
           children: <Widget>[
             AppBar(
-              title: Hero(child: Text(course.title), tag: course.id,),
+              title: Text(course.title),
               centerTitle: true,
               backgroundColor: Colors.transparent,
               elevation: 0,
@@ -191,15 +190,17 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
                       time: course.time,
                       group: course.group,
                       examTime: course.examTime,
+                      unit: course.unit,
+                      faculty: course.faculty,
                     ),
                     if (isEnrolled)
                       ChangeNotifierProvider<Course>.value(
-                        child: CourseDetailExam(listKeyHandler: function,),
+                        child: CourseDetailExam(),
                         value: course,
                       ),
                     if (isEnrolled)
                       ChangeNotifierProvider<Course>.value(
-                        child: CourseDetailNote(func: function,),
+                        child: CourseDetailNote(),
                         value: course,
                       ),
                     ChangeNotifierProvider<Course>.value(

@@ -270,7 +270,7 @@ class _AuthCardState extends State<AuthCard> {
                   : Container(),
               InternationalPhoneNumberInput(
                 onInputChanged: (value) {
-                  info['phone'] = value;
+                  info['phone'] = value[0] == '0' ? info['phone'] = value.substring(1, ) : info['phone'] = value;
                   print(info['phone']);
                 },
                 formatInput: false,
@@ -401,7 +401,7 @@ class _AuthCardState extends State<AuthCard> {
                           },
                         )
                       ],
-                    )
+                    ),
             ],
           ),
         ),

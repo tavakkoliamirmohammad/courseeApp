@@ -42,10 +42,12 @@ class MainDrawer extends StatelessWidget {
               () => Navigator.of(context)
                   .pushReplacementNamed(DepartmentScreen.routeName)),
           Divider(),
+
           _drawerItemBuilder('درباره ما', Icons.info, () {
             Navigator.of(context).pushReplacementNamed(AboutUsScreen.routeName);
           }),
           Divider(),
+
           _drawerItemBuilder("خروج", Icons.exit_to_app, () {
             Navigator.of(context).pop();
 //            Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);

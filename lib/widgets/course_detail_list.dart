@@ -9,7 +9,8 @@ class CourseDetailList extends StatelessWidget {
   final String sexulaity;
   final int group;
   final String examTime;
-
+  final String unit;
+final String faculty;
 
   CourseDetailList({
     @required this.teacher,
@@ -18,6 +19,8 @@ class CourseDetailList extends StatelessWidget {
     @required this.sexulaity,
     @required this.group,
     @required this.examTime,
+    @required this.unit,
+    @required this.faculty,
   });
 
   @override
@@ -57,7 +60,12 @@ class CourseDetailList extends StatelessWidget {
         CourseDetailItem(
           title: "واحد",
           icon: Icons.format_list_numbered_rtl,
-          subtitle: "3",
+          subtitle: unit,
+        ),
+        CourseDetailItem(
+          title: "بخش ها و رشته ها",
+          icon: FontAwesomeIcons.bookReader,
+          subtitle: faculty,
         )
       ],
     );
