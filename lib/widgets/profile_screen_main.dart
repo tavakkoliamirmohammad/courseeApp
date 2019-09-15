@@ -55,25 +55,15 @@ class ProfileScreenMain extends StatelessWidget {
                         },
 
                         child: Container(
-                          height: 120,
-                          width: 120,
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          decoration: BoxDecoration(shape: BoxShape.circle),
-                          child: FittedBox(
-                            fit: BoxFit.fill,
-                            child: ClipOval(
-                              child: FadeInImage(
-                                placeholder: AssetImage(
-                                  'assets/images/avatar.png',
-                                ),
-                                image: (auth.image == null || auth.image.isEmpty)
-                                    ? AssetImage(
-                                  'assets/images/avatar.png',
-                                )
-                                    : MemoryImage(
-                                  base64.decode(auth.image),
-                                ),
-                              ),
+                          margin: EdgeInsets.only(bottom: 20),
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage:(auth.image == null || auth.image.isEmpty)
+                                ? AssetImage(
+                              'assets/images/avatar.png',
+                            )
+                                : MemoryImage(
+                              base64.decode(auth.image),
                             ),
                           ),
                         ),

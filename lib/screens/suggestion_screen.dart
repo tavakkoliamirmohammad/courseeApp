@@ -43,12 +43,13 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
+    final routeArgs = ModalRoute.of(context).settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        title: Text('ثبت انتقادات و پیشنهادات'),
+        title: Text(routeArgs == 'suggestion' ?  'ثبت انتقادات و پیشنهادات' : 'گزارش باگ'),
       ),
       body: Form(
         key: _formKey,
@@ -58,6 +59,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
+                Padding(padding: const EdgeInsets.all(10.0)),
                 Container(
                   child: Directionality(
                     textDirection: TextDirection.rtl,
@@ -67,7 +69,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                       cursorColor: Theme.of(context).accentColor,
                       textDirection: TextDirection.rtl,
                       decoration: InputDecoration(
-                        labelText: 'انتقاد یا پیشنهاد',
+                        labelText: routeArgs == 'suggestion' ? 'انتقاد یا پیشنهاد' : 'گزارش باگ',
                         border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
                       ),
                       onFieldSubmitted: (value) async {
