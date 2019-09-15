@@ -87,6 +87,12 @@ flutter:
         - asset: fonts/iransans_bold.ttf
           weight: 700
 
+    - family: Niconne
+      fonts:
+            - asset: fonts/Niconne-Regular.ttf
+
+  #            - asset: fonts/Niconne-Regular.ttf
+
 
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

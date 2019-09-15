@@ -25,7 +25,36 @@ class MainDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('Drawer Header'),
+            child: Center(
+              child: Column(children: [
+                Card(
+                  elevation: 18.0,
+                  shape: CircleBorder(),
+                  clipBehavior: Clip.antiAlias,
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: AssetImage('assets/images/logo.png'),
+                    backgroundColor: Colors.black,
+                  ),
+                ),
+                SizedBox(height: 10,),
+                Text(
+                  'Coursee',
+                  style: TextStyle(
+                      fontSize: 40,
+                      fontFamily: 'Niconne',
+                      letterSpacing: 8,
+                      decoration: TextDecoration.none,
+                      shadows: <Shadow>[
+                        Shadow(
+                          offset: Offset(6.0, 4.0),
+                          blurRadius: 3.0,
+                          color: Color(0xff6e2142),
+                        )
+                      ]),
+                ),
+              ]),
+            ),
             decoration: BoxDecoration(
               color: Theme.of(context).accentColor,
             ),
@@ -42,10 +71,10 @@ class MainDrawer extends StatelessWidget {
               () => Navigator.of(context)
                   .pushReplacementNamed(DepartmentScreen.routeName)),
           Divider(),
-    _drawerItemBuilder('درباره ما', Icons.info, () {
-      Navigator.of(context).pushReplacementNamed(AboutUsScreen.routeName);
-
-    }),
+          _drawerItemBuilder('درباره ما', Icons.info, () {
+            Navigator.of(context).pushReplacementNamed(AboutUsScreen.routeName);
+          }),
+          Divider(),
           _drawerItemBuilder("خروج", Icons.exit_to_app, () {
             Navigator.of(context).pop();
 //            Navigator.of(context).pushReplacementNamed(AuthScreen.routeName);

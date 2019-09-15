@@ -27,6 +27,7 @@ class AuthScreen extends StatelessWidget {
                           child: CircleAvatar(
                             radius: 50,
                             backgroundImage: AssetImage('assets/images/logo.png'),
+                            backgroundColor: Colors.transparent,
                           ),
                         ),
                         AuthCard(departments: departments,)
