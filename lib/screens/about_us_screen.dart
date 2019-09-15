@@ -6,11 +6,21 @@ import 'package:sess_app/screens/report_screen.dart';
 import 'package:sess_app/screens/suggestion_screen.dart';
 import 'package:sess_app/screens/terms_policy_screen.dart';
 import 'package:sess_app/widgets/main_drawer.dart';
-import 'package:sess_app/screens/terms_policy_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutUsScreen extends StatelessWidget {
   static const routeName = '/about-us';
+
+
+  Widget _buildNamePhoneDialog(String name, String phoneNumber) {
+    return ListTile(
+      title:Text(phoneNumber) ,
+      trailing: Text(name),
+      onTap: () {
+        launch("tel://" + phoneNumber);
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,8 +109,17 @@ class AboutUsScreen extends StatelessWidget {
             Divider(),
             ListTile(
               onTap: () async {
-                final result = await authData.fetchContact();
-                launch("tel://" + result['phone'].toString());
+                showDialog(
+                    context: context,
+                    builder: (context) =>
+                        SimpleDialog(
+                          children: <Widget>[
+                            _buildNamePhoneDialog("پشتیبانی", "09379852503"),
+                          ],
+                        )
+                );
+//                final result = await authData.fetchContact();
+
               },
               title: Text('تماس با ما', textDirection: TextDirection.rtl),
             ),

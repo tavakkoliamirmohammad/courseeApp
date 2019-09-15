@@ -90,6 +90,9 @@ flutter:
     - family: Niconne
       fonts:
             - asset: fonts/Niconne-Regular.ttf
+    - family: Lato
+      fonts:
+        - asset: fonts/Lato-Regular.ttf
 
   #            - asset: fonts/Niconne-Regular.ttf
 

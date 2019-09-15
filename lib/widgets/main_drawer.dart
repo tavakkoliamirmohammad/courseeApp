@@ -32,7 +32,7 @@ class MainDrawer extends StatelessWidget {
                   shape: CircleBorder(),
                   clipBehavior: Clip.antiAlias,
                   child: CircleAvatar(
-                    radius: 20,
+                    radius: 30,
                     backgroundImage: AssetImage('assets/images/logo.png'),
                     backgroundColor: Colors.black,
                   ),

@@ -11,14 +11,12 @@ class ProfileScreenMain extends StatelessWidget {
   Widget build(BuildContext context) {
     final auth = Provider.of<Auth>(context, listen: false);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Flexible(
-            flex: 2,
-            fit: FlexFit.tight,
-            child: Container(
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Container(
               margin: EdgeInsets.only(bottom: 35),
               child: Stack(
                 alignment: Alignment.bottomCenter,
@@ -80,37 +78,28 @@ class ProfileScreenMain extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          Flexible(
-            flex: 4,
-            fit: FlexFit.tight,
-            child: ListView.builder(
-//              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemBuilder: (context, index) => Column(
-                children: <Widget>[
-                  ListTile(
-                    onTap: () {
-                      Navigator.of(context).pushNamed(
-                          CourseDetailScreen.routeName,
-                          arguments: auth.userCourses.firstWhere((course) =>
-                          course.id == auth.userCourses[index].id));
-                    },
-                    title: Text(
-                      auth.userCourses[index].title,
-                      textDirection: TextDirection.rtl,
-                    ),
-                    subtitle: Text(
-                      auth.userCourses[index].time,
-                    ),
+            ...auth.userCourses.map((course1) => Column(
+              children: <Widget>[
+                ListTile(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(
+                        CourseDetailScreen.routeName,
+                        arguments: auth.userCourses.firstWhere((course) =>
+                        course.id == course1.id));
+                  },
+                  title: Text(
+                    course1.title,
+                    textDirection: TextDirection.rtl,
                   ),
-                  Divider(),
-                ],
-              ),
-              itemCount: auth.userCourses.length,
-            ),
-          ),
-        ],
+                  subtitle: Text(
+                    course1.time,
+                  ),
+                ),
+                Divider(),
+              ],
+            ))
+          ],
+      ),
     );
   }
 }
