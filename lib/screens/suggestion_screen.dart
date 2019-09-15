@@ -27,14 +27,14 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
 //    const url = 'http://sessapp.moarefe98.ir/profile/report/create';
     var response = await http.post(
         'http://sessapp.moarefe98.ir/report/create/',
-      body: json.encode({
-        "text": suggestion.toString(),
-      }),
-      headers: {
-    "Accept": "application/json",
-    'Content-Type': 'application/json',
-    "Authorization": "Token " + authData.token.toString(),
-    });
+        body: json.encode({
+          "text": suggestion.toString(),
+        }),
+        headers: {
+          "Accept": "application/json",
+          'Content-Type': 'application/json',
+          "Authorization": "Token " + authData.token.toString(),
+        });
     print(response.statusCode);
     print(response.body);
     print("sugg code: " + json.decode(response.body).toString());

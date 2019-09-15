@@ -95,6 +95,7 @@ class ProfileScreenMain extends StatelessWidget {
             flex: 4,
             fit: FlexFit.tight,
             child: ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) => Column(
                 children: <Widget>[

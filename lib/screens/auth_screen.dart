@@ -9,8 +9,8 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
-      resizeToAvoidBottomInset: false,
+//      resizeToAvoidBottomPadding: false,
+//      resizeToAvoidBottomInset: false,
       body: LayoutBuilder(
           builder: (ctx, constraint) => SingleChildScrollView(
                 child: ConstrainedBox(

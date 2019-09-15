@@ -143,20 +143,29 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
     return FloatingActionButton(
       onPressed: () {
         showModalBottomSheet(
+          isScrollControlled: true,
             context: context,
-            builder: (_) => ModalModifyExamNote(
-                  afterSave: _currentPage == 1
-                      ? (String note, DateTime dateTime, double grade,
-                              String token) =>
-                          course.addExam(
-                              course.id, note, dateTime, grade, token)
-                      : (String note, String token) =>
-                          course.addNote(course.id, note, token),
-                  type: _currentPage == 1 ? Type.AddExam : Type.AddNote,
-                ),
-            isScrollControlled: true);
+            builder: (_) {
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: ModalModifyExamNote(
+                afterSave: _currentPage == 1
+                    ? (String note, DateTime dateTime, double grade,
+                    String token) =>
+                    course.addExam(
+                        course.id, note, dateTime, grade, token)
+                    : (String note, String token) =>
+                    course.addNote(course.id, note, token),
+                type: _currentPage == 1 ? Type.AddExam : Type.AddNote,
+              ),
+            );
+            }
+            );
       },
       child: Icon(Icons.add),
+
     );
   }
   GlobalKey<AnimatedListState> _listKey = GlobalKey();
