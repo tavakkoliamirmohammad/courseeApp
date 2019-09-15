@@ -147,8 +147,11 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
             context: context,
             builder: (_) {
             return GestureDetector(
-              onTap: () {
+              onDoubleTap: (){
                 Navigator.of(context).pop();
+              },
+              onTap: () {
+                FocusScope.of(context).requestFocus(new FocusNode());
               },
               child: ModalModifyExamNote(
                 afterSave: _currentPage == 1
@@ -168,8 +171,6 @@ class _CourseDetailScreenState extends State<CourseDetailScreen> {
 
     );
   }
-  GlobalKey<AnimatedListState> _listKey = GlobalKey();
-  function(val) => _listKey = val;
   @override
   Widget build(BuildContext context) {
     return Scaffold(

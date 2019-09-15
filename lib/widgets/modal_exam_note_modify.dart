@@ -12,10 +12,7 @@ class ModalModifyExamNote extends StatefulWidget {
   Map<String, String> initialInfo = {};
 
   ModalModifyExamNote(
-      {
-      @required this.afterSave,
-      @required this.type,
-      this.initialInfo});
+      {@required this.afterSave, @required this.type, this.initialInfo});
 
   @override
   _ModalModifyExamNoteState createState() => _ModalModifyExamNoteState();
@@ -40,6 +37,17 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
   final hourFocusNode = FocusNode();
   final minuteFocusNode = FocusNode();
   final gradeFocusNode = FocusNode();
+
+  @override
+  void dispose() {
+    dayFocusNode.dispose();
+    monthFocusNode.dispose();
+    yearFocusNode.dispose();
+    hourFocusNode.dispose();
+    minuteFocusNode.dispose();
+    gradeFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   void didChangeDependencies() {
@@ -127,33 +135,35 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
     Navigator.of(context).pop(true);
   }
 
-  Widget _buildDateInput(
-      String title, Function validator, String value, Function onsave, FocusNode currFocusNode, FocusNode nextFocusNode) {
+  Widget _buildDateInput(String title, Function validator, String value,
+      Function onsave, FocusNode currFocusNode, FocusNode nextFocusNode) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 8),
       width: 70,
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: TextFormField(
-            initialValue: value,
-            cursorColor: Theme.of(context).accentColor,
-            keyboardType: TextInputType.number,
-            validator: validator,
-            onSaved: onsave,
-            textInputAction: currFocusNode != gradeFocusNode ? TextInputAction.next : TextInputAction.done,
-            decoration: InputDecoration(
-              labelText: title,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
+          initialValue: value,
+          cursorColor: Theme.of(context).accentColor,
+          keyboardType: TextInputType.number,
+          validator: validator,
+          onSaved: onsave,
+          textInputAction: currFocusNode != gradeFocusNode
+              ? TextInputAction.next
+              : TextInputAction.done,
+          decoration: InputDecoration(
+            labelText: title,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(10),
               ),
             ),
+          ),
           focusNode: currFocusNode,
           onFieldSubmitted: (_) {
-              currFocusNode == gradeFocusNode ? _saveForm() :
-              FocusScope.of(context).requestFocus(nextFocusNode);
-
+            currFocusNode == gradeFocusNode
+                ? _saveForm()
+                : FocusScope.of(context).requestFocus(nextFocusNode);
           },
         ),
       ),
@@ -232,7 +242,9 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['year'],
                                 (value) {
                                   info['year'] = value;
-                                }, yearFocusNode, hourFocusNode),
+                                },
+                                yearFocusNode,
+                                hourFocusNode),
                             _buildDateInput(
                                 "ماه",
                                 (String value) {
@@ -248,7 +260,9 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['month'],
                                 (value) {
                                   info['month'] = value;
-                                }, monthFocusNode, yearFocusNode),
+                                },
+                                monthFocusNode,
+                                yearFocusNode),
                             _buildDateInput(
                                 "روز",
                                 (String value) {
@@ -264,7 +278,9 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['day'],
                                 (value) {
                                   info['day'] = value;
-                                }, null, monthFocusNode),
+                                },
+                                null,
+                                monthFocusNode),
                           ],
                         ),
                         SizedBox(
@@ -296,7 +312,9 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['hour'],
                                 (value) {
                                   info['hour'] = value;
-                                }, hourFocusNode, minuteFocusNode),
+                                },
+                                hourFocusNode,
+                                minuteFocusNode),
                             _buildDateInput(
                                 "دقیقه",
                                 (String value) {
@@ -312,7 +330,9 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                                 info['minute'],
                                 (value) {
                                   info['minute'] = value;
-                                }, minuteFocusNode, gradeFocusNode),
+                                },
+                                minuteFocusNode,
+                                gradeFocusNode),
                           ],
                         ),
                         SizedBox(
@@ -341,7 +361,9 @@ class _ModalModifyExamNoteState extends State<ModalModifyExamNote> {
                             info['grade'],
                             (value) {
                               info['grade'] = value;
-                            }, gradeFocusNode, null),
+                            },
+                            gradeFocusNode,
+                            null),
                       ],
                     )
                   : Container(),

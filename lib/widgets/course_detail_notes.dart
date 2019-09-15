@@ -6,7 +6,6 @@ import 'package:sess_app/providers/auth.dart';
 import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/widgets/empty_item_notifier.dart';
 import 'package:sess_app/widgets/modal_exam_note_modify.dart';
-import 'package:sess_app/models/course_note.dart';
 
 class CourseDetailNote extends StatefulWidget {
   @override
@@ -35,28 +34,6 @@ class _CourseDetailNoteState extends State<CourseDetailNote>
 //
 //  }
 
-  Widget _buildItem(CourseNote item, Animation animation) {
-    return SizeTransition(
-        sizeFactor: animation,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.red, Colors.deepOrange],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight),
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: ListTile(
-            key: ValueKey(item.id),
-            title: Text(
-              item.note,
-              textDirection: TextDirection.rtl,
-            ),
-            subtitle: Text(PersianDate().gregorianToJalali(
-                item.dateTime.toString(), "yyyy/mm/dd  HH:nn")),
-          ),
-        ));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,15 +118,23 @@ class _CourseDetailNoteState extends State<CourseDetailNote>
                     onTap: () {
                       showModalBottomSheet(
                           context: context,
-                          builder: (context) => ModalModifyExamNote(
-                                afterSave: (String note, String token) =>
-                                    course.editNote(course.notes[i].id, note,
-                                        token, course.notes[i].dateTime),
-                                type: Type.EditNote,
-                                initialInfo: {
-                                  "desciption": course.notes[i].note
-                                },
-                              ),
+                          builder: (context) => GestureDetector(
+                            onDoubleTap: (){
+                              Navigator.of(context).pop();
+                            },
+                            onTap: () {
+                              FocusScope.of(context).requestFocus(new FocusNode());
+                            },
+                            child: ModalModifyExamNote(
+                                  afterSave: (String note, String token) =>
+                                      course.editNote(course.notes[i].id, note,
+                                          token, course.notes[i].dateTime),
+                                  type: Type.EditNote,
+                                  initialInfo: {
+                                    "desciption": course.notes[i].note
+                                  },
+                                ),
+                          ),
                           isScrollControlled: true);
                       setState(() {
                         

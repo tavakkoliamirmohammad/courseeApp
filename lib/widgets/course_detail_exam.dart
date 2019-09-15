@@ -6,7 +6,6 @@ import 'package:sess_app/providers/course.dart';
 import 'package:sess_app/widgets/modal_exam_note_modify.dart';
 import 'package:persian_date/persian_date.dart';
 import 'package:sess_app/widgets/empty_item_notifier.dart';
-import 'package:sess_app/models/exam.dart';
 
 class CourseDetailExam extends StatefulWidget {
   @override
@@ -14,30 +13,6 @@ class CourseDetailExam extends StatefulWidget {
 }
 
 class _CourseDetailExamState extends State<CourseDetailExam> {
-  Widget _buildItem(Exam item, Animation animation) {
-    return SizeTransition(
-        sizeFactor: animation,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.red, Colors.deepOrange],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight),
-              borderRadius: BorderRadius.all(Radius.circular(20))),
-          child: ListTile(
-            key: ValueKey(item.id),
-            title: Text(
-              item.description,
-              textDirection: TextDirection.rtl,
-            ),
-            subtitle: Text(PersianDate().gregorianToJalali(
-                item.examTime.toString(), "yyyy/mm/dd  HH:nn")),
-          ),
-
-        )
-    );
-  }
   @override
   Widget build(BuildContext context) {
     final course = Provider.of<Course>(context);
@@ -113,26 +88,34 @@ class _CourseDetailExamState extends State<CourseDetailExam> {
                     builder: (_) {
                       final dateTime = PersianDate(
                           gregorian: course.exams[i].examTime.toString());
-                      return ModalModifyExamNote(
-                        afterSave:
-                            (String note, DateTime dateTime, double grade, String token) =>
-                                course.editExam(
-                          course.exams[i].id,
-                          note,
-                          dateTime,
-                          grade,
-                          token,
-                        ),
-                        type: Type.EditExam,
-                        initialInfo: {
-                          "desciption": course.exams[i].description,
-                          "year": dateTime.year.toString(),
-                          "month": dateTime.month.toString(),
-                          "day": dateTime.day.toString(),
-                          "hour": dateTime.hour.toString(),
-                          "minute": dateTime.minute.toString(),
-                          'grade': course.exams[i].grade.toString(),
+                      return GestureDetector(
+                        onDoubleTap: (){
+                          Navigator.of(context).pop();
                         },
+                        onTap: () {
+                          FocusScope.of(context).requestFocus(new FocusNode());
+                        },
+                        child: ModalModifyExamNote(
+                          afterSave:
+                              (String note, DateTime dateTime, double grade, String token) =>
+                                  course.editExam(
+                            course.exams[i].id,
+                            note,
+                            dateTime,
+                            grade,
+                            token,
+                          ),
+                          type: Type.EditExam,
+                          initialInfo: {
+                            "desciption": course.exams[i].description,
+                            "year": dateTime.year.toString(),
+                            "month": dateTime.month.toString(),
+                            "day": dateTime.day.toString(),
+                            "hour": dateTime.hour.toString(),
+                            "minute": dateTime.minute.toString(),
+                            'grade': course.exams[i].grade.toString(),
+                          },
+                        ),
                       );
                     },
                     isScrollControlled: true);
