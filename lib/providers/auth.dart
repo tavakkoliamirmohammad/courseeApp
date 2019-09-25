@@ -33,7 +33,7 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> signup(String phone, String verifyCode, String name,
-      String departmentId, DepartmentsProvider departments) async {
+      String departmentId) async {
     final res = await http.post("http://sessapp.moarefe98.ir/api-token-auth/",
         body: json.encode({
           'username': phone,
