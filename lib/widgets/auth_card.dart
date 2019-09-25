@@ -185,16 +185,16 @@ class _AuthCardState extends State<AuthCard> {
       if (userState == UserState.Signup) {
 //        await departments.signup(
 //            info['phone'], code, info['name'], info['dep'].id.toString());
-//        try {
-//          final result = await InternetAddress.lookup('google.com');
-//          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-//            await departments.signup(
-//                info['phone'], code, info['name'], info['dep'].id.toString());
-//            print('connected');
-//          }
-//        } on SocketException catch (_) {
-//          print('not connected');
-//        }
+        try {
+          final result = await InternetAddress.lookup('google.com');
+          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+            await departments.signup(
+                info['phone'], code, info['name'], info['dep'].id.toString());
+            print('connected');
+          }
+        } on SocketException catch (_) {
+          print('not connected');
+        }
       } else {
         await departments.login(info['phone'], code, widget.departments);
       }
