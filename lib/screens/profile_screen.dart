@@ -39,15 +39,13 @@ void _showErrorSnackBar(BuildContext ctx, String message) {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool init = false;
-
   Future<void> _choosePicture(BuildContext ctx, ImageSource source, Auth auth) async {
     File selectedFile = await ImagePicker.pickImage(
       source: source,
-      maxWidth: 600,
+      maxWidth: 1080,
     );
     try {
-      await auth.upload(selectedFile);
+      await auth.upload(selectedFile, false);
       if (selectedFile != null) {
         setState(() {
           auth.image = base64Encode(selectedFile.readAsBytesSync());
@@ -57,7 +55,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _showErrorSnackBar(ctx, 'خطا در برقراری ارتباط با سرور');
     }
   }
-
 
 @override
 Widget build(BuildContext context) {
@@ -129,6 +126,25 @@ Widget build(BuildContext context) {
                                       ),
                                       Text(
                                         'دوربین',
+                                        textDirection: TextDirection.rtl,
+                                      ),
+                                    ],
+                                  ),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: <Widget>[
+                                      IconButton(
+                                        icon: Icon(Icons.delete),
+                                        onPressed: () async {
+                                          Navigator.of(context).pop();
+                                          await auth.upload(null, true);
+                                          setState(() {
+                                            auth.image = null;
+                                          });
+                                        },
+                                      ),
+                                      Text(
+                                        'حذف عکس',
                                         textDirection: TextDirection.rtl,
                                       ),
                                     ],

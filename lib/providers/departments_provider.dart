@@ -22,7 +22,6 @@ class DepartmentsProvider with ChangeNotifier {
       extractedList.add(Department(id: dep['id'], name: dep['title']));
     });
     _departments = extractedList;
-    print(_departments.length);
     notifyListeners();
   }
 

@@ -33,7 +33,7 @@ class ProfileScreenMain extends StatelessWidget {
                   Positioned(
                       bottom: -50,
                       child: InkWell(
-                        onTap: () {
+                        onTap: (auth.image == null || auth.image.isEmpty) ? () {} : () {
                           showDialog(
                             context: context,
                             builder: (context) => Dismissible(

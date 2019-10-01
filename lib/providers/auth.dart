@@ -118,7 +118,6 @@ class Auth with ChangeNotifier {
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-    print(json.decode(res.body));
     course.enroll();
     notifyListeners();
   }
@@ -137,8 +136,6 @@ class Auth with ChangeNotifier {
     } catch (e) {
       throw e;
     }
-
-//    userCourseList.courses.removeWhere((courseInList) => courseInList.id == course.id);
   }
 
   Map<String, String> _formatTimePlace(String timePlace) {
@@ -188,7 +185,6 @@ class Auth with ChangeNotifier {
   }
 
   Future<void> fetchUserDetails() async {
-    print("called");
     try {
       var response =
           await http.get("http://Sessapp.moarefe98.ir/profile", headers: {
@@ -199,7 +195,6 @@ class Auth with ChangeNotifier {
       userCourseList = CourseListProvider();
       var userInfo = List<Map<String, dynamic>>.from(
           jsonDecode(utf8.decode(response.bodyBytes)));
-      print("userInfo: " + userInfo[0]['user_course'][0]['course']['unit'][12].toString());
       userInfo[0]['user_course'].forEach((courseData) {
         Map<String, String> timePlace =
             _formatTimePlace(courseData['course']['time_room']);
@@ -209,7 +204,6 @@ class Auth with ChangeNotifier {
             List<Map<String, dynamic>>.from(courseData['notes']);
         List<Map<String, dynamic>> exExams =
             List<Map<String, dynamic>>.from(courseData['exam_dates']);
-        print("exams: " + exExams.toString());
         notes = exNotes
             .map((note) => CourseNote(
                 note: note['text'],
@@ -240,20 +234,17 @@ class Auth with ChangeNotifier {
             courseData['course'] ['vahed'],
             _formatFacultyName(courseData['course']['unit']));
       });
-//      notifyListeners();
     } on Exception catch (e) {
       print(e.toString());
+      throw e;
     }
   }
 
-  Future upload(File imageFile) async {
-    if (imageFile == null) {
-      print("reached");
+  Future upload(File imageFile, bool imageRemoved) async {
+    if (imageFile == null && !imageRemoved) {
       return;
     }
-    String base64Image = base64Encode(imageFile.readAsBytesSync());
-    print('baseImg: ' + base64Image);
-//    String fileName = imageFile.path.split("/").last;
+    String base64Image = imageRemoved ? '' : base64Encode(imageFile.readAsBytesSync());
     final response =
         await http.post('http://sessapp.moarefe98.ir/profile/update/',
             body: json.encode({
@@ -267,8 +258,6 @@ class Auth with ChangeNotifier {
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-
-    print("response: " + response.body.toString());
   }
 
   Future<Map<String, dynamic>> fetchUserInitialInfo() async {
@@ -278,7 +267,6 @@ class Auth with ChangeNotifier {
       'Content-Type': 'application/json',
       "Authorization": "Token " + token.toString(),
     });
-    print(json.decode(utf8.decode(response.bodyBytes))[0]);
     return Map<String, dynamic>.from(
         json.decode(utf8.decode(response.bodyBytes))[0]);
   }
@@ -291,7 +279,6 @@ class Auth with ChangeNotifier {
       'Content-Type': 'application/json',
       "Authorization": "Token " + token.toString(),
     });
-    print("Terms: " + json.decode(response.body).toString());
     return json.decode(response.body)[0];
   }
 
@@ -303,12 +290,10 @@ class Auth with ChangeNotifier {
       'Content-Type': 'application/json',
       "Authorization": "Token " + token.toString(),
     });
-    print("contact: " + json.decode(response.body).toString());
     return json.decode(response.body)[0];
   }
 
   List<Course> get userCourses {
-    print("courses: " + userCourseList.courses.toString());
     return userCourseList.courses;
   }
 }

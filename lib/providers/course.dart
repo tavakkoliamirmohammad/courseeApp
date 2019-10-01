@@ -143,7 +143,6 @@ class Course with ChangeNotifier {
           'Content-Type': 'application/json',
           "Authorization": "Token " + token.toString(),
         });
-    print(json.decode(res.body));
     final index = exams.indexWhere((element) {
       return element.id == id;
     });
@@ -160,7 +159,6 @@ class Course with ChangeNotifier {
       'Content-Type': 'application/json',
       "Authorization": "Token " + token.toString(),
     });
-    print(json.decode(res.body));
     exams.removeWhere((element) {
       return element.id == id;
     });
@@ -176,7 +174,6 @@ class Course with ChangeNotifier {
     });
     var courseDetails = List<Map<String, dynamic>>.from(
         jsonDecode(utf8.decode(response.bodyBytes)));
-    print("profiles: " + courseDetails[0]['profiles'].toString());
     return courseDetails[0]['profiles'];
 
   }
